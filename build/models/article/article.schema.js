@@ -1,14 +1,14 @@
-import { Schema, model } from "mongoose";
-const MessageSchema = new Schema({
-    name: {
+import * as mongoose from 'mongoose';
+const ArticleSchema = new mongoose.Schema({
+    title: {
         type: String,
         required: true
     },
-    email: {
+    image: {
         type: String,
         required: true
     },
-    message: {
+    description: {
         type: String,
         required: true
     },
@@ -17,5 +17,4 @@ const MessageSchema = new Schema({
         default: Date.now,
     },
 });
-const Messages = model("Message", MessageSchema);
-export default Messages;
+export default ArticleSchema;
