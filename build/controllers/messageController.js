@@ -7,16 +7,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import pkg from "http-status";
+const { OK, NOT_FOUND, BAD_REQUEST, CREATED } = pkg;
 import messageModel from "../models/messageModel.js";
 export const getMessages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const messages = yield messageModel.find();
-        return res.status(200).json({
+        return res.status(OK).json({
             messages
         });
     }
     catch (error) {
-        return res.send({
+        return res.status(NOT_FOUND).send({
             Message: "unable to get messages"
         });
     }
@@ -25,12 +27,12 @@ export const getUniqueMessage = (req, res) => __awaiter(void 0, void 0, void 0, 
     const id = req.params.id;
     try {
         const message = yield messageModel.findById({ _id: id });
-        return res.status(200).json({
+        return res.status(OK).json({
             message
         });
     }
     catch (error) {
-        return res.send({
+        return res.status(NOT_FOUND).send({
             Message: "unable to get message"
         });
     }
@@ -48,12 +50,12 @@ export const createMessage = (req, res) => __awaiter(void 0, void 0, void 0, fun
             date: day,
             time,
         });
-        return res.status(201).json({
+        return res.status(CREATED).json({
             newMessage
         });
     }
     catch (error) {
-        return res.send({
+        return res.status(NOT_FOUND).send({
             Message: "unable to create new message"
         });
     }
@@ -62,8 +64,13 @@ export const deleteMessage = (req, res) => __awaiter(void 0, void 0, void 0, fun
     const id = req.params.id;
     try {
         const message = yield messageModel.findByIdAndDelete({ _id: id });
+        if (!message) {
+            return res.status(404).json({
+                message: `message with ${id} is not found`
+            });
+        }
         return res.status(200).json({
-            message
+            message: `message with ${id} was deleted successfully`
         });
     }
     catch (error) {

@@ -16,6 +16,6 @@ const MessageSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-});
+}, { timestamps: true });
 const Messages = model("Message", MessageSchema);
 export default Messages;
