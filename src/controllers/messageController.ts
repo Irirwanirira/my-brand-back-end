@@ -32,9 +32,9 @@ export const getUniqueMessage = async(req:Request , res: Response)=> {
 
 export const createMessage  = async(req:Request , res: Response)=> {
     try {
-        const date = new Date();
-        let day = date.toDateString()
-        let time = date.toLocaleTimeString()
+        const toDate = new Date();
+        let day = toDate.toDateString()
+        let time = toDate.toLocaleTimeString()
         const {name, email, message } = req.body
         const newMessage = await  messageModel.create({
             name: name,
@@ -43,12 +43,12 @@ export const createMessage  = async(req:Request , res: Response)=> {
             date: day,
             time,
         });
-            res.status(201).json({
+         return   res.status(201).json({
                 newMessage
             })
         
     } catch (error) {
-        res.send({
+      return  res.send({
             Message: "unable to create new message"
         })
         
