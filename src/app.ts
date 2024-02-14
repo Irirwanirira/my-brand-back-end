@@ -13,9 +13,10 @@ mongoose
 .then(() => {
     const app: Application  = express()
     app.use(express.json())
+    app.use(express.urlencoded({extended: true}))       
     app.use("/api", Routes)
     app.listen(process.env.PORT, ()=> {
-        console.log("Wakanda forever on Atlas port " + PORT) 
+        console.log("Wakanda forever on Atlas port " + PORT)
     }) 
 })
    

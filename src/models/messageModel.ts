@@ -24,7 +24,6 @@ const MessageSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    time: String
 })
 
 const Messages= model<Message>("Message", MessageSchema)
