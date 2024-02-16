@@ -7,17 +7,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import pkg from "http-status";
 import Articles from "../models/article/articleModel.js";
+const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT } = pkg;
 export const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const articles = yield Articles.find();
-        return res.status(200).json({
-            articles
+        return res.status(OK).json({
+            status: "success",
+            data: { articles },
         });
     }
     catch (error) {
-        return res.send({
-            Message: "unable to get articles"
+        return res.status(NOT_FOUND).send({
+            status: "fail",
+            message: "Articles not found",
         });
     }
 });
@@ -26,27 +30,31 @@ export const getUniqueArticle = (req, res) => __awaiter(void 0, void 0, void 0, 
     try {
         const article = yield Articles.findById({ _id: id });
         return res.status(200).json({
-            article
+            status: "success",
+            data: { article },
         });
     }
     catch (error) {
-        return res.send({
-            Message: "unable to get article"
+        return res.status(NOT_FOUND).send({
+            status: "fail",
+            message: "unable to get article",
         });
     }
 });
 export const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { title, image, description, date } = req.body;
+        const { title, image, description } = req.body;
         const oldArticle = yield Articles.findOne({ title, description });
         if (oldArticle) {
-            return res.status(400).json({
-                Message: "Article already exist"
+            return res.status(NOT_FOUND).json({
+                status: "fail",
+                message: "Article already exist",
             });
         }
         if (!title || !image || !description) {
-            return res.status(400).json({
-                Message: "All fields are required"
+            return res.status(NO_CONTENT).json({
+                status: "fail",
+                message: "All fields are required",
             });
         }
         let toDate = new Date();
@@ -55,15 +63,17 @@ export const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, fun
             title,
             image,
             description,
-            date: day
+            date: day,
         });
-        return res.status(201).json({
-            newArticle
+        return res.status(CREATED).json({
+            status: "success",
+            data: { article: newArticle },
         });
     }
     catch (error) {
         return res.send({
-            Message: "unable to create new article"
+            status: "fail",
+            message: "unable to create new article",
         });
     }
 });
@@ -72,26 +82,46 @@ export const deleteArticle = (req, res) => __awaiter(void 0, void 0, void 0, fun
     try {
         const article = yield Articles.findByIdAndDelete({ _id: id });
         return res.status(200).json({
-            article
+            status: "success",
+            data: null,
         });
     }
     catch (error) {
-        return res.send({
-            Message: "unable to delete article"
+        return res.status(NOT_FOUND).json({
+            status: "fail",
+            message: `article with id: ${id} can not be found`,
         });
     }
 });
 export const updateArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const article = yield Articles.findByIdAndUpdate({ _id: id }, req.body, { new: true });
-        return res.status(200).json({
-            article
+        const article = yield Articles.findById({ _id: id });
+        const { title, image, description } = req.body;
+        if (!article) {
+            return res.status(NOT_FOUND).json({
+                status: "fail",
+                message: `article with id: ${id} can not be found`,
+            });
+        }
+        if (title) {
+            article.title = title;
+        }
+        if (image) {
+            article.image = image;
+        }
+        if (description) {
+            article.description = description;
+        }
+        return res.status(OK).json({
+            status: "success",
+            data: { article },
         });
     }
     catch (error) {
-        return res.send({
-            Message: "unable to update article"
+        return res.status(BAD_REQUEST).send({
+            status: "fail",
+            message: "unable to update article",
         });
     }
 });

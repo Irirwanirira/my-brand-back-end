@@ -18,4 +18,4 @@ mongoose
         console.log("Wakanda forever on Atlas port " + PORT);
     });
 })
-.catch((err) => { console.log(err, `unable to connect database`, process.env.MONGODB_URL); });
+    .catch((err) => { console.log(err, `unable to connect database`, process.env.MONGODB_URL); });

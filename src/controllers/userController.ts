@@ -4,14 +4,15 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Users from "../models/userModels.js";
 
-const { CREATED, OK, NOT_FOUND, BAD_REQUEST } = pkg;
+const { CREATED, OK, NOT_FOUND, BAD_REQUEST, UNAUTHORIZED } = pkg;
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { name, email, password} = req.body;
+    const { name, email, password } = req.body;
     const userExist = await Users.findOne({ email });
     if (userExist) {
       return res.status(BAD_REQUEST).json({
+        status: "fail",
         message: "user already exist",
       });
     }
@@ -20,12 +21,16 @@ export const registerUser = async (req: Request, res: Response) => {
     const user = await Users.create({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
     });
-    return res.status(CREATED).json({ message: "Registration successful" });
+    return res.status(CREATED).json({
+      status: "success",
+      data: { user },
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(BAD_REQUEST).json({
+      status: "fail",
       message: "unable to register user, kindly use different email",
     });
   }
@@ -37,64 +42,72 @@ export const loginUser = async (req: Request, res: Response) => {
     const user = await Users.findOne({ email });
     if (!user) {
       return res.status(NOT_FOUND).json({
+        status: "fail",
         message: "user not found, Please register",
       });
     }
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      return res.status(BAD_REQUEST).json({ message: "Incorrect password" });
+      return res.status(UNAUTHORIZED).json({
+        status: "fail",
+        message: "Incorrect password",
+      });
     }
 
     const payload = {
-        userEmail: user.email,
-        roles: user.role,
-    }
+      userEmail: user.email,
+      roles: user.role,
+    };
 
-    const accessToken  = jwt.sign(  
-        payload,
-        process.env.ACCESS_TOKEN_SECRET!, {
-            expiresIn: '15min' 
-        }
-   );
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
+      expiresIn: "15min",
+    });
 
-    const refreshToken = jwt.sign(
-        payload,
-        process.env.REFRESH_TOKEN_SECRET!, {
-        expiresIn: '1y'
-    })
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
+      expiresIn: "1y",
+    });
 
-    res.cookie('jwt', refreshToken, {
-        httpOnly: true,
-        secure: true,
-        path: '/auth/refreshToken',
-        maxAge: 7 * 24 * 60 * 60 * 1000
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      path: "/auth/refreshToken",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
-    })
-
-    return res.status(OK).json({ Message: user.name + " logged in successful",accessToken });
+    return res.status(OK).json({
+      status: "success",
+      data: {
+        user: user.name,
+        accessToken,
+      },
+    });
   } catch (error) {
-    return res.status(BAD_REQUEST).json({
+    return res.status(UNAUTHORIZED).json({
+      status: "fail",
       message: "unable to login user",
     });
   }
 };
 
 export const logout = async (req: Request, res: Response) => {
-    const cookies = req.cookies
-    if (!cookies?.jwt) return res.sendStatus(204)
-    res.clearCookie('jwt', { httpOnly: true, secure: true })
-    res.json({ message: 'Logged out'})
-}
+  res.clearCookie("jwt");
+  return res.status(OK).json({
+    status: "success",
+    data: "user logged out successfully",
+  });
+};
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await Users.find();
     return res.status(OK).json({
-      users,
+      status: "success",
+      data: { users },
     });
   } catch (error) {
-    return res.status(NOT_FOUND).send({
-      Message: "unable to get Users",
+    return res.status(NOT_FOUND).json({
+      status: "fail",
+      message: "unable to get Users",
     });
   }
 };
@@ -103,11 +116,15 @@ export const getUniqUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const user = await Users.findById({ _id: id });
-    return res.status(OK).json({ user });
+    return res.status(OK).json({
+      status: "success",
+      data: { user },
+    });
   } catch (error) {
-    return res
-      .status(NOT_FOUND)
-      .json({ message: `user with id: ${id} is not found` });
+    return res.status(NOT_FOUND).json({
+      status: "fail",
+      message: `user with id: ${id} is not found`,
+    });
   }
 };
 
@@ -118,20 +135,24 @@ export const deleteUser = async (req: Request, res: Response) => {
     const user = await Users.findByIdAndDelete({ _id: id });
     if (!user) {
       return res.status(NOT_FOUND).json({
+        status: "fail",
         message: `user with id: ${id} is not found`,
       });
     }
     if (user.role === "admin") {
       return res.status(BAD_REQUEST).json({
+        status: "fail",
         message: "admin cannot be deleted",
       });
     }
 
     return res.status(OK).json({
-      message: `user ${id} was deleted successfully `,
+      status: "success",
+      data: null,
     });
   } catch (error) {
     return res.status(BAD_REQUEST).json({
+      status: "fail",
       message: `unable to delete user ${id}`,
     });
   }
@@ -140,19 +161,32 @@ export const deleteUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const user = await Users.findByIdAndUpdate({ _id: id }, req.body, {
-      new: true,
-    });
+    const user = await Users.findById({ _id: id });
+    const { name, email, profilePhoto } = req.body;
+
     if (!user) {
       return res.status(NOT_FOUND).json({
+        status: "fail",
         message: `user with id: ${id} is not found`,
       });
     }
+    if (name) {
+      user.name = name;
+    }
+    if (email) {
+      user.email = email;
+    }
+    if (profilePhoto) {
+      user.profilePhoto = profilePhoto;
+    }
+    await user.save();
     return res.status(OK).json({
-      user,
+      status: "success",
+      data: { user },
     });
   } catch (error) {
     return res.status(BAD_REQUEST).json({
+      status: "fail",
       message: `unable to update user ${id}`,
     });
   }

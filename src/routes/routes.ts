@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import {createMessage, getMessages, getUniqueMessage, deleteMessage} from "../controllers/messageController.js"
-import {createArticle, getArticles, getUniqueArticle, updateArticle} from "../controllers/articleController.js";
+import {createArticle, getArticles, getUniqueArticle, updateArticle,deleteArticle} from "../controllers/articleController.js";
 import { registerUser, loginUser, getUsers,getUniqUser, deleteUser, updateUser, logout} from "../controllers/userController.js"
 
 import verifyJWT from "../middlewares/verifyJWT.js"
@@ -16,6 +16,7 @@ router
     .post("/article", createArticle)
     .get("/article", getArticles)
     .get("/article/:id", getUniqueArticle)
+    .delete("/article/:id", deleteArticle)
     .patch("/article/:id", updateArticle)
 
     .post("/auth/register", registerUser)

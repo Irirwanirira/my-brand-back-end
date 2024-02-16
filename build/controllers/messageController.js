@@ -14,12 +14,14 @@ export const getMessages = (req, res) => __awaiter(void 0, void 0, void 0, funct
     try {
         const messages = yield messageModel.find();
         return res.status(OK).json({
-            messages
+            status: "success",
+            data: { messages },
         });
     }
     catch (error) {
         return res.status(NOT_FOUND).send({
-            Message: "unable to get messages"
+            status: "fail",
+            message: "unable to get messages",
         });
     }
 });
@@ -28,12 +30,14 @@ export const getUniqueMessage = (req, res) => __awaiter(void 0, void 0, void 0, 
     try {
         const message = yield messageModel.findById({ _id: id });
         return res.status(OK).json({
-            message
+            status: "success",
+            data: { message },
         });
     }
     catch (error) {
-        return res.status(NOT_FOUND).send({
-            Message: "unable to get message"
+        return res.status(NOT_FOUND).json({
+            status: "fail",
+            message: "unable to get message",
         });
     }
 });
@@ -43,6 +47,11 @@ export const createMessage = (req, res) => __awaiter(void 0, void 0, void 0, fun
         let day = toDate.toDateString();
         let time = toDate.toLocaleTimeString();
         const { name, email, message } = req.body;
+        if (!name || !email || !message) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ status: "fail", message: "all fields are required" });
+        }
         const newMessage = yield messageModel.create({
             name: name,
             email,
@@ -50,14 +59,14 @@ export const createMessage = (req, res) => __awaiter(void 0, void 0, void 0, fun
             date: day,
             time,
         });
-        return res.status(CREATED).json({
-            newMessage
-        });
+        return res
+            .status(CREATED)
+            .json({ status: "success", data: { message: newMessage } });
     }
     catch (error) {
-        return res.status(NOT_FOUND).send({
-            Message: "unable to create new message"
-        });
+        return res
+            .status(NOT_FOUND)
+            .send({ status: "fail", message: "unable to create new message" });
     }
 });
 export const deleteMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -65,17 +74,20 @@ export const deleteMessage = (req, res) => __awaiter(void 0, void 0, void 0, fun
     try {
         const message = yield messageModel.findByIdAndDelete({ _id: id });
         if (!message) {
-            return res.status(404).json({
-                message: `message with ${id} is not found`
+            return res.status(NOT_FOUND).json({
+                status: "error",
+                message: `message with ${id} is not found`,
             });
         }
         return res.status(200).json({
-            message: `message with ${id} was deleted successfully`
+            status: "success",
+            data: null,
         });
     }
     catch (error) {
-        return res.send({
-            Message: "unable to delete message"
+        return res.status(NOT_FOUND).send({
+            status: "fail",
+            message: `message with ${id} as id is not found`,
         });
     }
 });
