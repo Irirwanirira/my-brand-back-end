@@ -3,6 +3,7 @@ const router = express.Router();
 import { createMessage, getMessages, getUniqueMessage, deleteMessage } from "../controllers/messageController.js";
 import { createArticle, getArticles, getUniqueArticle, updateArticle, deleteArticle } from "../controllers/articleController.js";
 import { registerUser, loginUser, getUsers, getUniqUser, deleteUser, updateUser, logout } from "../controllers/userController.js";
+import { addComment, deleteComment } from '../controllers/commentController.js';
 import verifyJWT from "../middlewares/verifyJWT.js";
 router
     .post("/message", createMessage)
@@ -14,6 +15,8 @@ router
     .get("/article/:id", getUniqueArticle)
     .delete("/article/:id", deleteArticle)
     .patch("/article/:id", updateArticle)
+    .post("/article/:id/comment", addComment)
+    .delete("/comment/:id", deleteComment)
     .post("/auth/register", registerUser)
     .post("/auth/login", loginUser)
     .get("auth/logout", logout)

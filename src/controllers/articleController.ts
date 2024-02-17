@@ -1,7 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import pkg from "http-status";
-import Articles from "../models/article/articleModel.js";
-const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT } = pkg;
+import Articles from "../models/articleModel.js";
+const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR  } = pkg;
 
 export const getArticles = async (req: Request, res: Response) => {
   try {
@@ -21,16 +21,22 @@ export const getArticles = async (req: Request, res: Response) => {
 export const getUniqueArticle = async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
-    const article = await Articles.findById({ _id: id });
+    const article = await Articles.findById(id).populate("comments");
+    if (!article) {
+      return res.status(NOT_FOUND).json({
+          status: "fail",
+          message: "Article not found"
+      });
+  }
     return res.status(200).json({
       status: "success",
       data: { article },
     });
   } catch (error) {
-    return res.status(NOT_FOUND).send({
+    return res.status(INTERNAL_SERVER_ERROR).json({
       status: "fail",
-      message: "unable to get article",
-    });
+      message: "Unable to get article",
+  });
   }
 };
 
@@ -60,7 +66,9 @@ export const createArticle = async (req: Request, res: Response) => {
       image,
       description,
       date: day,
+      comments: [],
     });
+    await newArticle.save();
     return res.status(CREATED).json({
       status: "success",
       data: { article: newArticle },
