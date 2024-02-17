@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import pkg from "http-status";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import Users from "../models/userModels.js";
+import Users from "../../models/userModels.js";
 
 const { CREATED, OK, NOT_FOUND, BAD_REQUEST, UNAUTHORIZED } = pkg;
 

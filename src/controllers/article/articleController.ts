@@ -1,6 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import pkg from "http-status";
-import Articles from "../models/articleModel.js";
+import Articles from "../../models/articleModel.js";
 const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR  } = pkg;
 
 export const getArticles = async (req: Request, res: Response) => {

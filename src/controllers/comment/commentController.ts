@@ -1,7 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import pkg from "http-status";
-import Articles from "../models/articleModel.js";
-import Comment from "../models/commentModel.js";
+import Articles from "../../models/articleModel.js";
+import Comment from "../../models/commentModel.js";
 
 const { NOT_FOUND, BAD_REQUEST, OK, CREATED } = pkg;
 
