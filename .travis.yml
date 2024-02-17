@@ -1,0 +1,17 @@
+language: node_js
+
+node_js:
+  - "stable"
+notifications:
+  email: irijoseph41@gmail.com
+  on_success: always
+  on_failure: always
+  
+script:
+  - echo "skipping tests"
+  - echo "Installing Dependencies"
+  - npm install
+  - yarn build
+
+
+
