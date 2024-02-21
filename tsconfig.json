@@ -3,16 +3,18 @@
         "target": "es2016", 
         "jsx": "preserve",
         "rootDir": "./src", 
-        "module": "ES6",
+        "module": "NodeNext",
         "baseUrl": "./", 
-        "moduleResolution": "node10",
+        "moduleResolution": "NodeNext",
         "forceConsistentCasingInFileNames": true,
         "outDir": "./build",
         "strict": true,
         "esModuleInterop": true,
-        "skipLibCheck": true   
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
     },
     "include": [
         "src/**/*"
+    , "build/routes/routes.js"
     ]
 }

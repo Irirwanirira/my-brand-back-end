@@ -17,10 +17,7 @@ export const addComment = async (req: Request, res: Response) => {
         message: "article not found",
       });
     }
-    const newComment = await Comment.create({
-      comment,
-      author,
-    });
+    const newComment = { comment, author}
     article.comments.push(newComment);
     await article.save();
     return res.status(CREATED).json({

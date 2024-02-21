@@ -22,10 +22,7 @@ export const addComment = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 message: "article not found",
             });
         }
-        const newComment = yield Comment.create({
-            comment,
-            author,
-        });
+        const newComment = { comment, author };
         article.comments.push(newComment);
         yield article.save();
         return res.status(CREATED).json({

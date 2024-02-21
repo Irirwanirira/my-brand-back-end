@@ -3,7 +3,6 @@ const registerValidator = joi.object({
     name: joi.string().alphanum().min(3).max(25).trim(true).required(),
     email: joi.string().email().trim(true).required(),
     password: joi.string().min(7).trim(true).required(),
-    //   role: joi.string().valid('admin', 'user').required(),
 });
 const login = joi.object({
     email: joi.string().email().trim(true).required(),

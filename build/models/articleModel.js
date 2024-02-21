@@ -17,11 +17,11 @@ const ArticleSchema = new Schema({
         default: Date.now(),
     },
     comments: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Comments",
-            required: true,
-        }
+    // {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Comments",
+    //   required: true,
+    // }
     ]
 }, { timestamps: true });
 const Articles = model("Articles", ArticleSchema);

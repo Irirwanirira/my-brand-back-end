@@ -5,7 +5,7 @@ const validator = joi.object({
     message: joi.string().required(),
 });
 const messageValidator = (req, res, next) => {
-    const payload = req.body;
+    const payload = { name: req.body.name, email: req.body.email, message: req.body.message };
     const { error } = validator.validate(payload);
     if (error) {
         return res.status(400).json({
