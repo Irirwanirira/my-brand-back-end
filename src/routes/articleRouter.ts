@@ -15,7 +15,7 @@ const router = express.Router();
 
 router
   .post(
-    "/article",
+    "/",
     auth,
     permit(ROLE.USER, ROLE.ADMIN),
     articleValidator,

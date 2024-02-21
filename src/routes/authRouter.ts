@@ -21,7 +21,7 @@ router
   .post("/register", userValidator, registerUser)
   .post("/login", loginValidator, loginUser)
   .get("/logout", logout)
-  .get("/auth/users", auth, permit(ROLE.ADMIN), getUsers)
+  .get("/users", auth, permit(ROLE.ADMIN), getUsers)
   .get("/user/:id", auth, permit(ROLE.USER, ROLE.ADMIN), getUniqUser)
   .delete("/delete/:id", auth, permit(ROLE.ADMIN), deleteUser)
   .patch("/update/:id", auth, permit(ROLE.USER, ROLE.ADMIN), updateUser);

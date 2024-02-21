@@ -6,7 +6,7 @@ import permit from "../middlewares/adminPermission.js";
 import articleValidator from "../controllers/article/articleValidator.js";
 const router = express.Router();
 router
-    .post("/article", auth, permit(ROLE.USER, ROLE.ADMIN), articleValidator, createArticle)
+    .post("/", auth, permit(ROLE.USER, ROLE.ADMIN), articleValidator, createArticle)
     .get("/", getArticles)
     .get("/:id", getUniqueArticle)
     .delete("/:id", auth, permit(ROLE.USER, ROLE.ADMIN), deleteArticle)
