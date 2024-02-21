@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import pkg from "http-status";
 import Articles from "../../models/articleModel.js";
-import Comment from "../../models/commentModel.js";
+// import Comment from "../../models/commentModel.js";
 const { NOT_FOUND, BAD_REQUEST, OK, CREATED } = pkg;
 export const addComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -22,7 +22,10 @@ export const addComment = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 message: "article not found",
             });
         }
-        const newComment = { comment, author };
+        const newComment = {
+            id: Date.now().toString(),
+            comment, author
+        };
         article.comments.push(newComment);
         yield article.save();
         return res.status(CREATED).json({
@@ -39,11 +42,21 @@ export const addComment = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 export const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
+    console.log(id);
     try {
-        const comment = yield Comment.findByIdAndDelete({ _id: id });
-        return res.status(200).json({
+        const article = yield Articles.findById(id);
+        if (!article) {
+            return res.status(NOT_FOUND).json({
+                status: "fail",
+                message: "article not found",
+            });
+        }
+        let comments = article.comments.filter((comment) => comment.id !== req.params.commentId);
+        article.comments = comments;
+        yield article.save();
+        return res.status(OK).json({
             status: "success",
-            data: null,
+            message: "comment deleted successfully",
         });
     }
     catch (error) {

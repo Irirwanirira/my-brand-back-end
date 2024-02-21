@@ -13,6 +13,6 @@ const router = express.Router();
 
 router
     .post("/article/:id/comment", commentValidator, addComment)
-    .delete("/:id", auth, permit(ROLE.USER, ROLE.ADMIN), deleteComment)
+    .delete("/:id/comment/:commentId", deleteComment)
 
 export default router;
