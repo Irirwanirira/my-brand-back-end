@@ -5,7 +5,7 @@ name: Build Status
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ ft-coverage-badge ]
   pull_request:
     branches: [ dev ]
 

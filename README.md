@@ -3,4 +3,4 @@
 Link to deployment: https://my-brand-rvzj.onrender.com
 
 
-
+coverage badge: doc: https://dev.to/thejaredwilcurt/coverage-badge-with-github-actions-finally-59fa
