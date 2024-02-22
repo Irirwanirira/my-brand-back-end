@@ -1,5 +1,4 @@
 import { model, Schema, Document } from "mongoose";
-// import Comment from "./commentModel.js";
 
 interface ArticleType extends Document {
   title: string;
@@ -27,13 +26,7 @@ const ArticleSchema = new Schema(
       type: Date,
       default: Date.now(),
     },
-    comments: [
-      // {
-      //   type: Schema.Types.ObjectId,
-      //   ref: "Comments",
-      //   required: true,
-      // }
-    ]
+    comments: []
   },
   { timestamps: true }
 );
