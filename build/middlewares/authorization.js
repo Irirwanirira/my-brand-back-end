@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import jwt from "jsonwebtoken";
-import pkg from "http-status";
-const { UNAUTHORIZED, FORBIDDEN } = pkg;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const http_status_1 = __importDefault(require("http-status"));
+const { UNAUTHORIZED, FORBIDDEN } = http_status_1.default;
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.headers.authorization === undefined || req.headers.authorization === null) {
         return res.status(UNAUTHORIZED).json({
@@ -25,7 +30,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     else {
-        jwt.verify(token.substring(1, token.length - 1), process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+        jsonwebtoken_1.default.verify(token.substring(1, token.length - 1), process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
             if (err) {
                 return res.status(FORBIDDEN).json({ status: 'fail',
                     message: err.message + ", " + err.name
@@ -45,4 +50,4 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
 });
-export default auth;
+exports.default = auth;

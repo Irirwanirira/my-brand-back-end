@@ -1,6 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const ROLE = {
     ADMIN: 'admin',
     USER: 'user',
     GUEST: 'guest'
 };
-export default ROLE;
+exports.default = ROLE;
