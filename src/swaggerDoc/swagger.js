@@ -14,15 +14,72 @@ const doc = {
 
   host: 'localhost:3000',
   basePath: '/api',
-  schemes: ['http'],
-
+  schemes: ['http', 'https'],
+  consumes: ['application/json'],
+  produces: ['application/json'],
+  securitySchemes:{
+    bearerAuth: {
+      type: 'http',
+      scheme: 'bearer'
+    }
+  },
   securityDefinitions: {
     JWT: {
       type: 'apiKey',
       in: 'header',
-      name: 'Authorization',
+      name: 'X-API-KEY',
       description: 'Bearer token',
     },
+  },
+  tags: [
+    {
+      name: 'Auth',
+      description: 'Authentication and authorization endpoints',
+    },
+    {
+      name: 'Users',
+      description: 'User endpoints',
+    },
+    {
+      name: 'Posts',
+      description: 'Post endpoints',
+    },
+    {
+      name: 'Comments',
+      description: 'Comment endpoints',
+    },
+  ],
+
+  definitions: {
+    User: {
+      type: 'object',
+      required: ['username', 'email', 'password'],
+      properties: {
+        username: {
+          type: 'string',
+          example: 'johndoe',
+        },
+        email: {
+          type: 'string',
+          example: 'johndoe@gmail.com',
+        },
+        password: {
+          type: 'string',
+          example: 'password',
+        },
+      },
+    }
+
+
+  },
+  security: [
+    {
+      JWT: [],
+    },
+  ],
+  externalDocs: {
+    description: 'Find out more about My Brand',
+    url: ''
   }
 };
 
