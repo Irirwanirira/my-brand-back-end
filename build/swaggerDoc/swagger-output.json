@@ -12,17 +12,42 @@
     },
     "host": "localhost:3000",
     "basePath": "/api",
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Authentication and authorization endpoints"
+        },
+        {
+            "name": "Users",
+            "description": "User endpoints"
+        },
+        {
+            "name": "Posts",
+            "description": "Post endpoints"
+        },
+        {
+            "name": "Comments",
+            "description": "Comment endpoints"
+        }
+    ],
     "schemes": [
-        "http"
+        "http",
+        "https"
     ],
     "securityDefinitions": {
         "JWT": {
             "type": "apiKey",
             "in": "header",
-            "name": "Authorization",
+            "name": "X-API-KEY",
             "description": "Bearer token"
         }
     },
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
     "paths": {
         "/auth/register": {
             "post": {
@@ -91,7 +116,7 @@
                 }
             }
         },
-        "/auth/auth/users": {
+        "/auth/users": {
             "get": {
                 "description": "",
                 "responses": {
@@ -203,7 +228,13 @@
                 }
             },
             "get": {
-                "description": "",
+                "summary": "Get all contact messages",
+                "description": "Retrieve all contact messages from the server",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "responses": {
                     "default": {
                         "description": ""
@@ -245,7 +276,7 @@
                 }
             }
         },
-        "/article/article": {
+        "/article/": {
             "post": {
                 "description": "",
                 "parameters": [
@@ -273,9 +304,7 @@
                         "description": "OK"
                     }
                 }
-            }
-        },
-        "/article/": {
+            },
             "get": {
                 "description": "",
                 "responses": {
@@ -386,7 +415,7 @@
                 }
             }
         },
-        "/comment/{id}": {
+        "/comment/{id}/comment/{commentId}": {
             "delete": {
                 "description": "",
                 "parameters": [
@@ -395,14 +424,101 @@
                         "in": "path",
                         "required": true,
                         "type": "string"
+                    },
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "default": {
+                        "description": ""
                     }
                 }
             }
         }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "example": "object"
+                },
+                "required": {
+                    "type": "array",
+                    "example": [
+                        "username",
+                        "email",
+                        "password"
+                    ],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "properties": {
+                    "type": "object",
+                    "properties": {
+                        "username": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "example": "string"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "example": "johndoe"
+                                }
+                            }
+                        },
+                        "email": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "example": "string"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "example": "johndoe@gmail.com"
+                                }
+                            }
+                        },
+                        "password": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "example": "string"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "example": "password"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "securitySchemes": {
+        "bearerAuth": {
+            "type": "http",
+            "scheme": "bearer"
+        }
+    },
+    "security": [
+        {
+            "JWT": []
+        }
+    ],
+    "externalDocs": {
+        "description": "Find out more about My Brand",
+        "url": ""
     }
 }

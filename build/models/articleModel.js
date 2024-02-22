@@ -16,13 +16,7 @@ const ArticleSchema = new Schema({
         type: Date,
         default: Date.now(),
     },
-    comments: [
-    // {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "Comments",
-    //   required: true,
-    // }
-    ]
+    comments: []
 }, { timestamps: true });
 const Articles = model("Articles", ArticleSchema);
 export default Articles;
