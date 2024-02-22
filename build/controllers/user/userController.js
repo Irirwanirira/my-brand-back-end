@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,24 +8,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import pkg from "http-status";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import Users from "../../models/userModels.js";
-const { CREATED, OK, NOT_FOUND, BAD_REQUEST, UNAUTHORIZED } = pkg;
-export const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.updateUser = exports.deleteUser = exports.getUniqUser = exports.getUsers = exports.logout = exports.loginUser = exports.registerUser = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const userModels_js_1 = __importDefault(require("../../models/userModels.js"));
+const { CREATED, OK, NOT_FOUND, BAD_REQUEST, UNAUTHORIZED } = http_status_1.default;
+const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password } = req.body;
-        const userExist = yield Users.findOne({ email });
+        const userExist = yield userModels_js_1.default.findOne({ email });
         if (userExist) {
             return res.status(BAD_REQUEST).json({
                 status: "fail",
                 message: "user already exist",
             });
         }
-        const salt = yield bcrypt.genSalt(10);
-        const hashedPassword = yield bcrypt.hash(password, salt);
-        const user = yield Users.create({
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const hashedPassword = yield bcrypt_1.default.hash(password, salt);
+        const user = yield userModels_js_1.default.create({
             name,
             email,
             password: hashedPassword,
@@ -42,17 +48,18 @@ export const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, func
         });
     }
 });
-export const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.registerUser = registerUser;
+const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
-        const user = yield Users.findOne({ email });
+        const user = yield userModels_js_1.default.findOne({ email });
         if (!user) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
                 message: "user not found, Please register",
             });
         }
-        const validPassword = yield bcrypt.compare(password, user.password);
+        const validPassword = yield bcrypt_1.default.compare(password, user.password);
         if (!validPassword) {
             return res.status(UNAUTHORIZED).json({
                 status: "fail",
@@ -63,10 +70,10 @@ export const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, functio
             userEmail: user.email,
             roles: user.role,
         };
-        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+        const accessToken = jsonwebtoken_1.default.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: "15min",
         });
-        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+        const refreshToken = jsonwebtoken_1.default.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: "1y",
         });
         res.cookie("jwt", refreshToken, {
@@ -90,16 +97,18 @@ export const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
     }
 });
-export const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.loginUser = loginUser;
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.clearCookie("jwt");
     return res.status(OK).json({
         status: "success",
         data: "user logged out successfully",
     });
 });
-export const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.logout = logout;
+const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield Users.find();
+        const users = yield userModels_js_1.default.find();
         return res.status(OK).json({
             status: "success",
             data: { users },
@@ -112,10 +121,11 @@ export const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function
         });
     }
 });
-export const getUniqUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getUsers = getUsers;
+const getUniqUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const user = yield Users.findById({ _id: id });
+        const user = yield userModels_js_1.default.findById({ _id: id });
         return res.status(OK).json({
             status: "success",
             data: { user },
@@ -128,10 +138,11 @@ export const getUniqUser = (req, res) => __awaiter(void 0, void 0, void 0, funct
         });
     }
 });
-export const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getUniqUser = getUniqUser;
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const user = yield Users.findByIdAndDelete({ _id: id });
+        const user = yield userModels_js_1.default.findByIdAndDelete({ _id: id });
         if (!user) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -156,10 +167,11 @@ export const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, functi
         });
     }
 });
-export const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteUser = deleteUser;
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const user = yield Users.findById({ _id: id });
+        const user = yield userModels_js_1.default.findById({ _id: id });
         const { name, email, profilePhoto } = req.body;
         if (!user) {
             return res.status(NOT_FOUND).json({
@@ -189,3 +201,4 @@ export const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, functi
         });
     }
 });
+exports.updateUser = updateUser;

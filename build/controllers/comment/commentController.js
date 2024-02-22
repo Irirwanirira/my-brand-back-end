@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,15 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import pkg from "http-status";
-import Articles from "../../models/articleModel.js";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteComment = exports.addComment = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const articleModel_js_1 = __importDefault(require("../../models/articleModel.js"));
 // import Comment from "../../models/commentModel.js";
-const { NOT_FOUND, BAD_REQUEST, OK, CREATED } = pkg;
-export const addComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const { NOT_FOUND, BAD_REQUEST, OK, CREATED } = http_status_1.default;
+const addComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
         const { comment, author } = req.body;
-        const article = yield Articles.findById(id).populate("comments");
+        const article = yield articleModel_js_1.default.findById(id).populate("comments");
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -40,11 +46,12 @@ export const addComment = (req, res) => __awaiter(void 0, void 0, void 0, functi
         });
     }
 });
-export const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.addComment = addComment;
+const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     console.log(id);
     try {
-        const article = yield Articles.findById(id);
+        const article = yield articleModel_js_1.default.findById(id);
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -66,3 +73,4 @@ export const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, fun
         });
     }
 });
+exports.deleteComment = deleteComment;
