@@ -12,33 +12,15 @@
   },
   "host": "localhost:3000",
   "basePath": "/api",
-  "tags": [
-    {
-      "name": "Auth",
-      "description": "Authentication and authorization endpoints"
-    },
-    {
-      "name": "Users",
-      "description": "User endpoints"
-    },
-    {
-      "name": "Posts",
-      "description": "Post endpoints"
-    },
-    {
-      "name": "Comments",
-      "description": "Comment endpoints"
-    }
-  ],
   "schemes": [
     "http",
     "https"
   ],
   "securityDefinitions": {
-    "JWT": {
+    "Bearer": {
       "type": "apiKey",
       "in": "header",
-      "name": "X-API-KEY",
+      "name": "Authorization",
       "description": "Bearer token"
     }
   },
@@ -228,13 +210,7 @@
         }
       },
       "get": {
-        "summary": "Get all contact messages",
-        "description": "Retrieve all contact messages from the server",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "description": "",
         "responses": {
           "default": {
             "description": ""
@@ -514,7 +490,7 @@
   },
   "security": [
     {
-      "JWT": []
+      "Bearer": []
     }
   ],
   "externalDocs": {

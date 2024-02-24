@@ -1,4 +1,4 @@
-import swaggerAutogen from 'swagger-autogen';
+const swaggerAutogen = require('swagger-autogen');
 
 const doc = {
   info: {
@@ -24,63 +24,18 @@ const doc = {
     }
   },
   securityDefinitions: {
-    JWT: {
+    Bearer: {
       type: 'apiKey',
       in: 'header',
-      name: 'X-API-KEY',
-      description: 'Bearer token',
+      name: 'Authorization',
+      description: 'Enter your bearer token in the format Bearer "<token>"',
     },
-  },
-  tags: [
-    {
-      name: 'Auth',
-      description: 'Authentication and authorization endpoints',
-    },
-    {
-      name: 'Users',
-      description: 'User endpoints',
-    },
-    {
-      name: 'Posts',
-      description: 'Post endpoints',
-    },
-    {
-      name: 'Comments',
-      description: 'Comment endpoints',
-    },
-  ],
-
-  definitions: {
-    User: {
-      type: 'object',
-      required: ['username', 'email', 'password'],
-      properties: {
-        username: {
-          type: 'string',
-          example: 'johndoe',
-        },
-        email: {
-          type: 'string',
-          example: 'johndoe@gmail.com',
-        },
-        password: {
-          type: 'string',
-          example: 'password',
-        },
-      },
-    }
-
-
   },
   security: [
     {
-      JWT: [],
+      Bearer: [],
     },
   ],
-  externalDocs: {
-    description: 'Find out more about My Brand',
-    url: ''
-  }
 };
 
 const outputFile = './swagger-output.json';
