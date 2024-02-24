@@ -16,47 +16,6 @@ exports.updateArticle = exports.deleteArticle = exports.createArticle = exports.
 const http_status_1 = __importDefault(require("http-status"));
 const articleModel_js_1 = __importDefault(require("../../models/articleModel.js"));
 const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR } = http_status_1.default;
-// /**
-// * @swagger
-// * components:
-// *   schemas:
-// *     Article:
-// *       type: object
-// *       required:
-// *         - title
-// *         - image
-// *         - description
-// *  
-// *       properties:
-// *         id:
-// *           type: string
-// *           description: The auto-generated id of the Post
-// *         title:
-// *           type: string
-// *           description: The title of your Post
-// *         image:
-// *           type: string
-// *           description: The content author
-// *          description:
-// *           type: string
-// *           description: The content author
-// *         date:   
-// *           type: string
-// *           description: The date of the article
-// *         comments:
-// *           type: array
-// *           items:
-// *             type: string
-// *           description: The comments of the article
-// *         example:
-// *           id: d5fE_asz
-// *           title: The New Turing Omnibus
-// *           image: https://images-na.ssl-images-amazon.com/images/I/51J9Wc6YJjL._SX331_BO1,204,203,200_.jpg
-// *           description: post 1
-// *           date: 2022-09-01
-// *           comments: ["comment1", "comment2"]
-// * 
-// */
 const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const articles = yield articleModel_js_1.default.find();

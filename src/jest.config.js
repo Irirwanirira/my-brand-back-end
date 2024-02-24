@@ -1,9 +1,7 @@
 export default {
-    testEnvironment: 'node',
-    preset: 'ts-jest',
-    globals: {
-      'ts-jest': {
-        tsconfig: 'tsconfig.json',
-      },
-    },
-  };
+  preset: "ts-jest",
+  testEnvironment: "node",
+  testMatch: ["**/**/*.test.ts"],
+  verbose: true,
+  forceExit: false,
+};
