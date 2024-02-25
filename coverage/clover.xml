@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1708872579254" clover="3.2.0">
+  <project timestamp="1708872579254" name="All files">
+    <metrics statements="25" coveredstatements="25" conditionals="7" coveredconditionals="6" methods="3" coveredmethods="3" elements="35" coveredelements="34" complexity="0" loc="25" ncloc="25" packages="2" files="2" classes="2"/>
+    <package name="build">
+      <metrics statements="14" coveredstatements="14" conditionals="7" coveredconditionals="6" methods="2" coveredmethods="2"/>
+      <file name="app.js" path="/home/actrox/Documents/andela/my-brand-back-end/build/app.js">
+        <metrics statements="14" coveredstatements="14" conditionals="7" coveredconditionals="6" methods="2" coveredmethods="2"/>
+        <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+        <line num="3" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src">
+      <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="app.ts" path="/home/actrox/Documents/andela/my-brand-back-end/src/app.ts">
+        <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
