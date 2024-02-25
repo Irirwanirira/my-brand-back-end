@@ -12,18 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const supertest_1 = __importDefault(require("supertest"));
-const express_1 = __importDefault(require("express"));
-const server_1 = __importDefault(require("../server"));
-describe('My Server', () => {
-    let app;
-    beforeEach(() => {
-        app = (0, express_1.default)();
-        (0, server_1.default)(app);
-    });
-    it('responds with welcome message', () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get('/');
-        expect(response.status).toBe(200);
-        expect(response.body).toEqual({ Message: 'Welcome to my brand new API, I hope you enjoy it.' });
-    }));
+const mongoose_1 = __importDefault(require("mongoose"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const connectDb = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield mongoose_1.default.connect(process.env.MONGODB_URL);
+        console.log('Database connected successfully');
+    }
+    catch (error) {
+        console.log('Unable to connect to the database', error);
+    }
 });
+exports.default = connectDb;

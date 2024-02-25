@@ -8,8 +8,8 @@
     "start": "node ./build/index.js",
     "start-dev": "nodemon ./build/index.js",
     "dev": "nodemon --exec ts-node ./src/index.ts",
-    "test": "jest",
-    "tests": "jext --watchAll --detectOpenHandles",
+    "test": "jest -i",
+    "tests": "jest --watchAll --detectOpenHandles",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "swagger": "node ./src/swaggerDoc/swagger.js",
     "redo-cli": "npx @redocly/cli build-docs ./src/swaggerDoc/swagger-output.json -o index.html"
@@ -28,7 +28,8 @@
     "mongodb": "^6.3.0",
     "mongoose": "^8.1.2",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -43,7 +44,7 @@
     "@types/supertest": "^6.0.2",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
-    "babel-jest": "^29.7.0",
+    "babel-core": "^7.0.0-bridge.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.3",
     "http-status": "^1.7.3",
