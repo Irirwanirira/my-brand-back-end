@@ -14,14 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteComment = exports.addComment = void 0;
 const http_status_1 = __importDefault(require("http-status"));
-const articleModel_js_1 = __importDefault(require("../../models/articleModel.js"));
+const articleModel_1 = __importDefault(require("../../models/articleModel"));
 // import Comment from "../../models/commentModel.js";
 const { NOT_FOUND, BAD_REQUEST, OK, CREATED } = http_status_1.default;
 const addComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
         const { comment, author } = req.body;
-        const article = yield articleModel_js_1.default.findById(id).populate("comments");
+        const article = yield articleModel_1.default.findById(id).populate("comments");
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -51,7 +51,7 @@ const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const id = req.params.id;
     console.log(id);
     try {
-        const article = yield articleModel_js_1.default.findById(id);
+        const article = yield articleModel_1.default.findById(id);
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",

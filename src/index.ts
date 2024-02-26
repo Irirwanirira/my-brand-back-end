@@ -1,10 +1,12 @@
-import app from './app.js';
-import connectDb from './database.js';
-import allRoutes from './routes/routes.js';
+import app from './app';
+import connectDb from './database';
+import allRoutes from './routes/routes';
 
 connectDb();
-app.use("/api", allRoutes)
+app.use("/brand/api/v1", allRoutes)
 const PORT = process.env.PORT || 3300
-app.listen(process.env.PORT, ()=> {
+const server = app.listen(process.env.PORT, ()=> {
     console.log("Wakanda forever on Atlas port ", PORT )
 })
+
+export default server;

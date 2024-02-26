@@ -2,7 +2,7 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import pkg from "http-status";
 const { OK, NOT_FOUND, BAD_REQUEST, CREATED } = pkg;
 
-import messageModel from "../../models/messageModel.js";
+import messageModel from "../../models/messageModel";
 
 export const getMessages = async (req: Request, res: Response) => {
   try {

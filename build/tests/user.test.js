@@ -12,18 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const supertest_1 = __importDefault(require("supertest"));
-const app_1 = __importDefault(require("../app"));
-describe('When our app is connected', () => {
-    test('It should respond with status code 200 and a welcome message', () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app_1.default).get('/');
-        expect(response.status).toBe(200);
-        expect(response.body).toEqual({ Message: 'Welcome to my brand new API, I hope you enjoy it.' });
-    }));
-});
-describe("When our app is not connected", () => {
-    test("It should respond with status code 404 and an error message", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app_1.default).get("/random");
-        expect(response.status).toBe(404);
+const userModels_1 = __importDefault(require("../models/userModels"));
+const userController_1 = require("../controllers/user/userController");
+describe("GET users", () => {
+    it('Should get al users', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {};
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        jest.spyOn(userModels_1.default, 'find').mockResolvedValue([]);
+        yield (0, userController_1.getUsers)(req, res);
+        expect(res.status).toHaveBeenLastCalledWith(200);
+        expect(res.json).toHaveBeenLastCalledWith({
+            status: "success",
+            data: { users: [] }
+        });
     }));
 });

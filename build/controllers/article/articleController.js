@@ -14,18 +14,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateArticle = exports.deleteArticle = exports.createArticle = exports.getUniqueArticle = exports.getArticles = void 0;
 const http_status_1 = __importDefault(require("http-status"));
-const articleModel_js_1 = __importDefault(require("../../models/articleModel.js"));
+const articleModel_1 = __importDefault(require("../../models/articleModel"));
 const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR } = http_status_1.default;
 const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const articles = yield articleModel_js_1.default.find();
+        const articles = yield articleModel_1.default.find();
         return res.status(OK).json({
             status: "success",
             data: { articles },
         });
     }
     catch (error) {
-        return res.status(NOT_FOUND).send({
+        return res
+            .status(NOT_FOUND)
+            .json({
             status: "fail",
             message: "Articles not found",
         });
@@ -35,7 +37,7 @@ exports.getArticles = getArticles;
 const getUniqueArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const article = yield articleModel_js_1.default.findById(id).populate("comments");
+        const article = yield articleModel_1.default.findById(id).populate("comments");
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -58,7 +60,7 @@ exports.getUniqueArticle = getUniqueArticle;
 const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { title, image, description } = req.body;
-        const oldArticle = yield articleModel_js_1.default.findOne({ title, description });
+        const oldArticle = yield articleModel_1.default.findOne({ title, description });
         if (oldArticle) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -73,7 +75,7 @@ const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         let toDate = new Date();
         let day = toDate.toDateString();
-        const newArticle = yield articleModel_js_1.default.create({
+        const newArticle = yield articleModel_1.default.create({
             title,
             image,
             description,
@@ -97,7 +99,7 @@ exports.createArticle = createArticle;
 const deleteArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const article = yield articleModel_js_1.default.findByIdAndDelete({ _id: id });
+        const article = yield articleModel_1.default.findByIdAndDelete({ _id: id });
         return res.status(200).json({
             status: "success",
             data: null,
@@ -114,7 +116,7 @@ exports.deleteArticle = deleteArticle;
 const updateArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const article = yield articleModel_js_1.default.findById({ _id: id });
+        const article = yield articleModel_1.default.findById({ _id: id });
         const { title, image, description } = req.body;
         if (!article) {
             return res.status(NOT_FOUND).json({

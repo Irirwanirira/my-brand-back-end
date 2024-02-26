@@ -18,10 +18,12 @@ dotenv_1.default.config();
 const connectDb = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(process.env.MONGODB_URL);
-        console.log('Database connected successfully');
+        return ('Database connected successfully');
     }
     catch (error) {
-        console.log('Unable to connect to the database', error);
+        return ({
+            message: 'Unable to connect to the database', error
+        });
     }
 });
 exports.default = connectDb;

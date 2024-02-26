@@ -1,6 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import pkg from "http-status";
-import Articles from "../../models/articleModel.js";
+import Articles from "../../models/articleModel";
 const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR  } = pkg;
 
 
@@ -12,7 +12,9 @@ export const getArticles = async (req: Request, res: Response) => {
       data: { articles },
     });
   } catch (error) {
-    return res.status(NOT_FOUND).send({
+    return res
+    .status(NOT_FOUND)
+    .json({
       status: "fail",
       message: "Articles not found",
     });

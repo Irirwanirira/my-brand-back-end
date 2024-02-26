@@ -5,11 +5,11 @@ import {
   getMessages,
   getUniqueMessage,
   deleteMessage,
-} from "../controllers/message/messageController.js";
-import ROLE from "../utils/roles.js";
-import auth from "../middlewares/authorization.js";
-import permit from "../middlewares/adminPermission.js";
-import messageValidator from "../controllers/message/messageValidator.js";
+} from "../controllers/message/messageController";
+import ROLE from "../utils/roles";
+import auth from "../middlewares/authorization";
+import permit from "../middlewares/adminPermission";
+import messageValidator from "../controllers/message/messageValidator";
 
 const router = express.Router();
 
