@@ -12,7 +12,7 @@ const doc = {
     }
   },
 
-  host: 'https://my-brand-rvzj.onrender.com',
+  host: 'my-brand-rvzj.onrender.com',
   basePath: '/brand/api/v1',
   schemes: ['http', 'https'],
   consumes: ['application/json'],

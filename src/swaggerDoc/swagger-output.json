@@ -10,7 +10,7 @@
       "url": "https://github.com/Irirwanirira/my-brand-back-end"
     }
   },
-  "host": "https://my-brand-rvzj.onrender.com",
+  "host": "my-brand-rvzj.onrender.com",
   "basePath": "/brand/api/v1",
   "schemes": [
     "http",
