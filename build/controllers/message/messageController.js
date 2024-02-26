@@ -15,10 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteMessage = exports.createMessage = exports.getUniqueMessage = exports.getMessages = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const { OK, NOT_FOUND, BAD_REQUEST, CREATED } = http_status_1.default;
-const messageModel_js_1 = __importDefault(require("../../models/messageModel.js"));
+const messageModel_1 = __importDefault(require("../../models/messageModel"));
 const getMessages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const messages = yield messageModel_js_1.default.find();
+        const messages = yield messageModel_1.default.find();
         return res.status(OK).json({
             status: "success",
             data: { messages },
@@ -35,7 +35,7 @@ exports.getMessages = getMessages;
 const getUniqueMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const message = yield messageModel_js_1.default.findById({ _id: id });
+        const message = yield messageModel_1.default.findById({ _id: id });
         return res.status(OK).json({
             status: "success",
             data: { message },
@@ -60,7 +60,7 @@ const createMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 .status(BAD_REQUEST)
                 .json({ status: "fail", message: "all fields are required" });
         }
-        const newMessage = yield messageModel_js_1.default.create({
+        const newMessage = yield messageModel_1.default.create({
             name: name,
             email,
             message,
@@ -81,7 +81,7 @@ exports.createMessage = createMessage;
 const deleteMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const message = yield messageModel_js_1.default.findByIdAndDelete({ _id: id });
+        const message = yield messageModel_1.default.findByIdAndDelete({ _id: id });
         if (!message) {
             return res.status(NOT_FOUND).json({
                 status: "error",

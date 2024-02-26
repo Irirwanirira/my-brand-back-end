@@ -1,4 +1,6 @@
-![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/<Irirwanirira>/<f797c2a306c69e309c45e249fe701aee>/raw/<my-brand-back-end>__pull_4.json)
+[![Build Status](https://app.travis-ci.com/Irirwanirira/my-brand-back-end.svg?branch=master)](https://app.travis-ci.com/Irirwanirira/my-brand-back-end)
+
+[![Coverage Status](https://coveralls.io/repos/github/Irirwanirira/my-brand-back-end/badge.svg?branch=dev)](https://coveralls.io/github/Irirwanirira/my-brand-back-end?branch=dev)
 
 # my-brand-back-end
 Link to deployment: https://my-brand-rvzj.onrender.com

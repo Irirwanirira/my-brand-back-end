@@ -14,16 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
-describe('When our app is connected', () => {
+const index_1 = __importDefault(require("../index"));
+describe('Test Express App', () => {
+    afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield index_1.default.close();
+    }));
     test('It should respond with status code 200 and a welcome message', () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app_1.default).get('/');
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ Message: 'Welcome to my brand new API, I hope you enjoy it.' });
     }));
-});
-describe("When our app is not connected", () => {
-    test("It should respond with status code 404 and an error message", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app_1.default).get("/random");
+    test('It should respond with status code 404 and an error message', () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app_1.default).get('/random');
         expect(response.status).toBe(404);
     }));
 });

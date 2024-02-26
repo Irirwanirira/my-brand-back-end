@@ -12,8 +12,8 @@ const doc = {
     }
   },
 
-  host: 'localhost:3000',
-  basePath: '/api',
+  host: 'https://my-brand-rvzj.onrender.com',
+  basePath: '/brand/api/v1',
   schemes: ['http', 'https'],
   consumes: ['application/json'],
   produces: ['application/json'],

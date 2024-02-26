@@ -1,11 +1,10 @@
 import express from "express";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from '../swaggerDoc/swagger-output.json' assert { type: 'json' } ;
-
-import messageRouter from "./messageRouter.js";
-import articleRouter from "./articleRouter.js";
-import authRouter from "./authRouter.js";
-import commentRouter from "./commentRouter.js";
+import swaggerDocument from '../swaggerDoc/swagger-output.json'
+import messageRouter from "./messageRouter";
+import articleRouter from "./articleRouter";
+import authRouter from "./authRouter";
+import commentRouter from "./commentRouter";
 
 
 const router = express.Router();
@@ -19,6 +18,5 @@ router.use("/article", articleRouter);
 router.use("/comment", commentRouter);
 
 router.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 
 export default router;

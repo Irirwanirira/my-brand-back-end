@@ -10,5 +10,8 @@ describe('When our app is connected', () => {
 });
 
 describe("When our app is not connected", () => {
-    
+    test("It should respond with status code 404 and an error message", async () => {
+        const response = await request(app).get("/random");
+        expect(response.status).toBe(404);
+    });
 });

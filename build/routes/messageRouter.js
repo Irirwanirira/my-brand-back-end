@@ -4,15 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const messageController_js_1 = require("../controllers/message/messageController.js");
-const roles_js_1 = __importDefault(require("../utils/roles.js"));
-const authorization_js_1 = __importDefault(require("../middlewares/authorization.js"));
-const adminPermission_js_1 = __importDefault(require("../middlewares/adminPermission.js"));
-const messageValidator_js_1 = __importDefault(require("../controllers/message/messageValidator.js"));
+const messageController_1 = require("../controllers/message/messageController");
+const roles_1 = __importDefault(require("../utils/roles"));
+const authorization_1 = __importDefault(require("../middlewares/authorization"));
+const adminPermission_1 = __importDefault(require("../middlewares/adminPermission"));
+const messageValidator_1 = __importDefault(require("../controllers/message/messageValidator"));
 const router = express_1.default.Router();
 router
-    .post("/", messageValidator_js_1.default, messageController_js_1.createMessage)
-    .get("/", authorization_js_1.default, (0, adminPermission_js_1.default)(roles_js_1.default.ADMIN), messageController_js_1.getMessages)
-    .get("/:id", authorization_js_1.default, (0, adminPermission_js_1.default)(roles_js_1.default.ADMIN), messageController_js_1.getUniqueMessage)
-    .delete("/:id", authorization_js_1.default, (0, adminPermission_js_1.default)(roles_js_1.default.ADMIN), messageController_js_1.deleteMessage);
+    .post("/", messageValidator_1.default, messageController_1.createMessage)
+    .get("/", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), messageController_1.getMessages)
+    .get("/:id", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), messageController_1.getUniqueMessage)
+    .delete("/:id", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), messageController_1.deleteMessage);
 exports.default = router;

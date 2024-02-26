@@ -12,16 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.deleteUser = exports.getUniqUser = exports.getUsers = exports.logout = exports.loginUser = exports.registerUser = void 0;
+exports.googleAuth = exports.updateUser = exports.deleteUser = exports.getUniqUser = exports.getUsers = exports.logout = exports.loginUser = exports.registerUser = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const userModels_js_1 = __importDefault(require("../../models/userModels.js"));
+const passport_1 = __importDefault(require("passport"));
+const userModels_1 = __importDefault(require("../../models/userModels"));
 const { CREATED, OK, NOT_FOUND, BAD_REQUEST, UNAUTHORIZED } = http_status_1.default;
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password } = req.body;
-        const userExist = yield userModels_js_1.default.findOne({ email });
+        const userExist = yield userModels_1.default.findOne({ email });
         if (userExist) {
             return res.status(BAD_REQUEST).json({
                 status: "fail",
@@ -30,7 +31,7 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
         const salt = yield bcrypt_1.default.genSalt(10);
         const hashedPassword = yield bcrypt_1.default.hash(password, salt);
-        const user = yield userModels_js_1.default.create({
+        const user = yield userModels_1.default.create({
             name,
             email,
             password: hashedPassword,
@@ -52,7 +53,7 @@ exports.registerUser = registerUser;
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
-        const user = yield userModels_js_1.default.findOne({ email });
+        const user = yield userModels_1.default.findOne({ email });
         if (!user) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -108,7 +109,7 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.logout = logout;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield userModels_js_1.default.find();
+        const users = yield userModels_1.default.find();
         return res.status(OK).json({
             status: "success",
             data: { users },
@@ -125,7 +126,7 @@ exports.getUsers = getUsers;
 const getUniqUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const user = yield userModels_js_1.default.findById({ _id: id });
+        const user = yield userModels_1.default.findById({ _id: id });
         return res.status(OK).json({
             status: "success",
             data: { user },
@@ -142,7 +143,7 @@ exports.getUniqUser = getUniqUser;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const user = yield userModels_js_1.default.findByIdAndDelete({ _id: id });
+        const user = yield userModels_1.default.findByIdAndDelete({ _id: id });
         if (!user) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -171,7 +172,7 @@ exports.deleteUser = deleteUser;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const user = yield userModels_js_1.default.findById({ _id: id });
+        const user = yield userModels_1.default.findById({ _id: id });
         const { name, email, profilePhoto } = req.body;
         if (!user) {
             return res.status(NOT_FOUND).json({
@@ -202,3 +203,20 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.updateUser = updateUser;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+passport_1.default.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/google/callback"
+}, function (accessToken, refreshToken, profile, done, err) {
+    // Users.findOrCreate({ googleId: profile.id }, function (err:any, user:any) {
+    return done(err, profile);
+    // });
+}));
+passport_1.default.serializeUser(function (user, done) {
+    done(null, user);
+});
+passport_1.default.deserializeUser(function (user, done) {
+    done(null, user);
+});
+exports.googleAuth = passport_1.default.authenticate('google', { scope: ['email', 'profile'] });

@@ -5,11 +5,11 @@ import {
   getUniqueArticle,
   updateArticle,
   deleteArticle,
-} from "../controllers/article/articleController.js";
-import ROLE from "../utils/roles.js";
-import auth from "../middlewares/authorization.js";
-import permit from "../middlewares/adminPermission.js";
-import articleValidator from "../controllers/article/articleValidator.js";
+} from "../controllers/article/articleController";
+import ROLE from "../utils/roles";
+import auth from "../middlewares/authorization";
+import permit from "../middlewares/adminPermission";
+import articleValidator from "../controllers/article/articleValidator";
 
 const router = express.Router();
 
@@ -17,13 +17,13 @@ router
   .post(
     "/",
     auth,
-    permit(ROLE.USER, ROLE.ADMIN),
+    permit(ROLE.ADMIN),
     articleValidator,
     createArticle
   )
   .get("/", getArticles)
   .get("/:id", getUniqueArticle)
-  .delete("/:id", auth, permit(ROLE.USER, ROLE.ADMIN), deleteArticle)
-  .patch("/:id", auth, permit(ROLE.USER), auth, updateArticle);
+  .delete("/:id", auth, permit(ROLE.ADMIN), deleteArticle)
+  .patch("/:id", auth, permit(ROLE.ADMIN), auth, updateArticle);
 
 export default router;
