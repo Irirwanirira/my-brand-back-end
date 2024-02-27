@@ -25,9 +25,9 @@ jobs:
         run: npm ci
       - name: Run tests
         env:
-          JWT_LIFETIME: 15min
-          JWT_SECRET_KEY: ${{ secrets.ACCESS_TOKEN_SECRET}}
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
           PORT: 3000
-          MONGO_URI : ${{ secrets.MONGO_URI }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
         run: npm test
 
