@@ -1,3 +1,7 @@
+[![pages-build-deployment](https://github.com/Irirwanirira/my-brand-back-end/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Irirwanirira/my-brand-back-end/actions/workflows/pages/pages-build-deployment) 
+
+[![Test Coveralls Parallel](https://github.com/Irirwanirira/my-brand-back-end/actions/workflows/node.js.yml/badge.svg)](https://github.com/Irirwanirira/my-brand-back-end/actions/workflows/node.js.yml)
+
 [![Build Status](https://app.travis-ci.com/Irirwanirira/my-brand-back-end.svg?branch=master)](https://app.travis-ci.com/Irirwanirira/my-brand-back-end)
 
 [![Coverage Status](https://coveralls.io/repos/github/Irirwanirira/my-brand-back-end/badge.svg?branch=dev)](https://coveralls.io/github/Irirwanirira/my-brand-back-end?branch=dev)

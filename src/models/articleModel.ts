@@ -24,7 +24,7 @@ const ArticleSchema = new Schema(
     },
     post_date: {
       type: Date,
-      default: Date.now(),
+      default: new Date(),
     },
     comments: []
   },

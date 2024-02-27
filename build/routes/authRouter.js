@@ -14,7 +14,7 @@ router
     .post("/register", userValidator_1.userValidator, userController_1.registerUser)
     .post("/login", userValidator_1.loginValidator, userController_1.loginUser)
     .get("/logout", userController_1.logout)
-    .get("/google", userController_1.googleAuth)
+    // .get("/google", googleAuth)
     .get("/users", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), userController_1.getUsers)
     .get("/user/:id", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.USER, roles_1.default.ADMIN), userController_1.getUniqUser)
     .delete("/delete/:id", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), userController_1.deleteUser)

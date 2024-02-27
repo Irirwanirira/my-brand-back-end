@@ -63,12 +63,11 @@ export const createArticle = async (req: Request, res: Response) => {
     }
 
     let toDate = new Date();
-    let day = toDate.toDateString();
     const newArticle = await Articles.create({
       title,
       image,
       description,
-      date: day,
+      post_date: toDate,
       comments: [],
     });
     await newArticle.save();

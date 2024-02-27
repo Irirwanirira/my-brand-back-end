@@ -12,11 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.googleAuth = exports.updateUser = exports.deleteUser = exports.getUniqUser = exports.getUsers = exports.logout = exports.loginUser = exports.registerUser = void 0;
+exports.updateUser = exports.deleteUser = exports.getUniqUser = exports.getUsers = exports.logout = exports.loginUser = exports.registerUser = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const passport_1 = __importDefault(require("passport"));
 const userModels_1 = __importDefault(require("../../models/userModels"));
 const { CREATED, OK, NOT_FOUND, BAD_REQUEST, UNAUTHORIZED } = http_status_1.default;
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -203,20 +202,22 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.updateUser = updateUser;
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-passport_1.default.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/google/callback"
-}, function (accessToken, refreshToken, profile, done, err) {
-    // Users.findOrCreate({ googleId: profile.id }, function (err:any, user:any) {
-    return done(err, profile);
-    // });
-}));
-passport_1.default.serializeUser(function (user, done) {
-    done(null, user);
-});
-passport_1.default.deserializeUser(function (user, done) {
-    done(null, user);
-});
-exports.googleAuth = passport_1.default.authenticate('google', { scope: ['email', 'profile'] });
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
+// passport.use(new GoogleStrategy({
+//     clientID: process.env.GOOGLE_CLIENT_ID,
+//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     callbackURL: "http://localhost:3000/google/callback"
+//   },
+//   function(accessToken:any, refreshToken:any, profile:any, done:any, err: any) {
+//     // Users.findOrCreate({ googleId: profile.id }, function (err:any, user:any) {
+//       return done(err, profile);
+//     // });
+//   }
+// ));
+// passport.serializeUser(function(user, done){
+//   done(null, user);
+// });
+// passport.deserializeUser(function(user:any, done){
+//   done(null, user);
+// });
+// export const googleAuth = passport.authenticate('google', { scope: ['email','profile'] });

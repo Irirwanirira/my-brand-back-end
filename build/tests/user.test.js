@@ -30,3 +30,109 @@ describe("GET users", () => {
         });
     }));
 });
+describe('Create a user', () => {
+    it('should create a new user', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            body: {
+                name: 'henry',
+                email: 'henry@example.com',
+                password: 'henry123.',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+            send: jest.fn(),
+        };
+        const mockNewUser = {
+            _id: '1',
+            name: 'henry',
+            email: 'henry@example.com',
+            password: 'henry123.',
+            role: 'user',
+            profilePhoto: 'https://example.com/image.jpg',
+        };
+        userModels_1.default.create = jest.fn().mockResolvedValue(mockNewUser);
+        yield (0, userController_1.registerUser)(req, res);
+        expect(res.status).toBeDefined();
+        expect(res.json).toBeDefined();
+    }), 20000);
+});
+describe('Get a unique user', () => {
+    it('should get a located user', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            params: {
+                id: '1',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        const mockUser = {
+            _id: '1',
+            name: 'henry',
+            email: 'henry@gmail.com',
+            role: 'user',
+            profilePhoto: 'https://example.com/image.jpg',
+        };
+        userModels_1.default.findById = jest.fn().mockResolvedValue(mockUser);
+        yield (0, userController_1.getUniqUser)(req, res);
+        expect(res.status).toHaveBeenNthCalledWith(1, 200);
+        expect(res.json).toHaveBeenNthCalledWith(1, { status: 'success', data: { user: mockUser } });
+    }));
+});
+describe('Delete a user', () => {
+    it('should delete a user', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            params: {
+                id: '1',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        const mockUser = {
+            _id: '1',
+            name: 'henry',
+            email: 'henry@gmail.com',
+            role: 'user',
+            profilePhoto: 'https://example.com/image.jpg',
+        };
+        userModels_1.default.findByIdAndDelete = jest.fn().mockResolvedValue(mockUser);
+        yield (0, userController_1.deleteUser)(req, res);
+        expect(res.status).toHaveBeenNthCalledWith(1, 200);
+        expect(res.json).toHaveBeenNthCalledWith(1, { status: 'success', data: null });
+    }));
+});
+describe('Update a user', () => {
+    it('should update a user', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            params: {
+                id: '1',
+            },
+            body: {
+                name: 'henry',
+                email: 'henry@gmail.com',
+                profilePhoto: 'https://example.com/image.jpg',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        const initialUserProps = {
+            _id: '1',
+            name: 'henry',
+            email: 'henry@gmail.com',
+            role: 'user',
+            profilePhoto: 'https://example.com/image.jpg',
+        };
+        const mockUser = Object.assign(Object.assign({}, initialUserProps), { save: jest.fn().mockResolvedValue(initialUserProps) });
+        userModels_1.default.findById = jest.fn().mockResolvedValue(mockUser);
+        yield (0, userController_1.updateUser)(req, res);
+        expect(res.status).toHaveBeenNthCalledWith(1, 200);
+        expect(res.json).toHaveBeenNthCalledWith(1, { status: 'success', data: { user: mockUser } });
+    }));
+});

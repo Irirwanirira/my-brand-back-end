@@ -22,8 +22,12 @@ const MessageSchema = new Schema({
     },
     date:{
         type: Date,
-        default: Date.now,
+        default: new Date(),
     },
+    time:{
+        type: String,
+        default: new Date().toLocaleTimeString(),
+    }
 }, {timestamps: true}
 )
 

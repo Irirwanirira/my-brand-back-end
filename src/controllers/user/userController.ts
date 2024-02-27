@@ -195,24 +195,24 @@ export const updateUser = async (req: Request, res: Response) => {
 
 
 
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/google/callback"
-  },
-  function(accessToken:any, refreshToken:any, profile:any, done:any, err: any) {
-    // Users.findOrCreate({ googleId: profile.id }, function (err:any, user:any) {
-      return done(err, profile);
-    // });
-  }
-));
-passport.serializeUser(function(user, done){
-  done(null, user);
-});
-passport.deserializeUser(function(user:any, done){
-  done(null, user);
-});
+// passport.use(new GoogleStrategy({
+//     clientID: process.env.GOOGLE_CLIENT_ID,
+//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     callbackURL: "http://localhost:3000/google/callback"
+//   },
+//   function(accessToken:any, refreshToken:any, profile:any, done:any, err: any) {
+//     // Users.findOrCreate({ googleId: profile.id }, function (err:any, user:any) {
+//       return done(err, profile);
+//     // });
+//   }
+// ));
+// passport.serializeUser(function(user, done){
+//   done(null, user);
+// });
+// passport.deserializeUser(function(user:any, done){
+//   done(null, user);
+// });
 
-export const googleAuth = passport.authenticate('google', { scope: ['email','profile'] });
+// export const googleAuth = passport.authenticate('google', { scope: ['email','profile'] });

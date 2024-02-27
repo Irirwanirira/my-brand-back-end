@@ -16,8 +16,12 @@ const MessageSchema = new mongoose_1.Schema({
     },
     date: {
         type: Date,
-        default: Date.now,
+        default: new Date(),
     },
+    time: {
+        type: String,
+        default: new Date().toLocaleTimeString(),
+    }
 }, { timestamps: true });
 const Messages = (0, mongoose_1.model)("Message", MessageSchema);
 exports.default = Messages;

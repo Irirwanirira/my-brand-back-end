@@ -30,3 +30,90 @@ describe("Get all messages ", () => {
         });
     }));
 });
+describe('Create a message', () => {
+    it('should create a new message', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            body: {
+                name: 'John Doe',
+                email: 'johndoe@example.com',
+                message: 'Hello, this is a test message',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+            send: jest.fn(),
+        };
+        const mockNewMessage = {
+            _id: '1',
+            name: 'John Doe',
+            email: 'johndoe@example.com',
+            message: 'Hello, this is a test message',
+            date: '2024-02-26',
+            time: '10:00 AM',
+        };
+        messageModel_1.default.create = jest.fn().mockResolvedValue(mockNewMessage);
+        yield (0, messageController_1.createMessage)(req, res);
+        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.json).toHaveBeenCalledWith({
+            status: 'success',
+            data: { message: mockNewMessage },
+        });
+    }));
+});
+describe('Get a unique message', () => {
+    it('should get a located message', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            params: {
+                id: '1',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        const mockMessage = {
+            _id: '1',
+            name: 'kim',
+            email: 'kim@gmail.com',
+            message: 'Hello, this is a test message',
+            date: '2024-02-26',
+            time: '10:00 AM',
+        };
+        messageModel_1.default.findById = jest.fn().mockResolvedValue(mockMessage);
+        yield (0, messageController_1.getUniqueMessage)(req, res);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            status: 'success',
+            data: { message: mockMessage },
+        });
+    }));
+});
+describe('Delete a message', () => {
+    it('should delete a message', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            params: {
+                id: '1',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        const mockMessage = {
+            _id: '1',
+            name: 'kim',
+            email: 'kim@gmail.com',
+            message: 'Hello, this is a test message',
+            date: '2024-02-26',
+            time: '10:00 AM',
+        };
+        messageModel_1.default.findByIdAndDelete = jest.fn().mockResolvedValue(mockMessage);
+        yield (0, messageController_1.deleteMessage)(req, res);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            status: 'success',
+            data: null,
+        });
+    }));
+});

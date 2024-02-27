@@ -30,54 +30,119 @@ describe("Get all articles ", () => {
         });
     }));
 });
-// jest.mock("../models/articleModel", () => ({
-//   findOne: jest.fn(),
-//   create: jest.fn(),
-// }));
-// describe("Create article", () => {
-//   let req: Partial<Request>;
-//   let res: Partial<Response>;
-//   let next: jest.Mock;
-//   beforeEach(() => {
-//     req = {
-//       body: {
-//         title: "welcome to software development",
-//         image: "image",
-//         description: "Say bye to your bed!",
-//       },
-//     } as Partial<Request>;
-//     res = {
-//       status: jest.fn().mockReturnThis(),
-//       json: jest.fn(),
-//       send: jest.fn(),
-//     };
-//     next = jest.fn();
-//   });
-//   test("should create an article", async () => {
-//     (Articles.findOne as jest.Mock).mockResolvedValue(null);
-//     const mockArticle = {
-//       _id: 1,
-//       title: "welcome to software development",
-//       image: "image",
-//       description: "Say bye to your bed!",
-//     };
-//     (Articles.create as jest.Mock).mockResolvedValue(mockArticle);
-//     await createArticle(req as Request, res as Response);
-//     expect(Articles.findOne).toHaveBeenCalledWith({
-//       title: req.body.title,
-//       description: req.body.description,
-//     });
-//     expect(Articles.create).toHaveBeenCalledWith({
-//       title: req.body.title,
-//       image: req.body.image,
-//       description: req.body.description,
-//       date: expect.any(Date),
-//       comments: [],
-//     });
-//     expect(res.status).toHaveBeenCalledWith(201);
-//     expect(res.json)?.toHaveBeenCalledWith({
-//       status: "success",
-//       data: { article: mockArticle },
-//     });
-//   });
-// });
+describe('Create an article', () => {
+    it('should create a new article', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            body: {
+                title: 'Hello everyone',
+                image: 'https://example.com/image.jpg',
+                description: 'Let us have our first first article',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+            send: jest.fn(),
+        };
+        const mockNewArticle = {
+            _id: '1',
+            title: 'Hello World',
+            image: 'https://example.com/image.jpg',
+            description: 'This is a test article',
+            post_date: new Date(),
+            comments: [],
+        };
+        articleModel_1.default.create = jest.fn().mockResolvedValue(mockNewArticle);
+        yield (0, articleController_1.createArticle)(req, res);
+        expect(res.status).toBeTruthy();
+        expect(res.json).toBeTruthy();
+    }), 20000);
+});
+describe('Get a unique article', () => {
+    it('should get a located article', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            params: {
+                id: '1',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        const mockArticle = {
+            _id: '1',
+            title: 'Hello World',
+            image: 'https://example.com/image.jpg',
+            description: 'This is a test article',
+            post_date: new Date(),
+            comments: [],
+        };
+        articleModel_1.default.findById = jest.fn().mockResolvedValue(mockArticle);
+        yield (0, articleController_1.getUniqueArticle)(req, res);
+        expect(res.status).toBeTruthy();
+        expect(res.json).toBeTruthy();
+    }));
+});
+describe('Delete an article', () => {
+    it('should delete a located article', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            params: {
+                id: '1',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        const mockArticle = {
+            _id: '1',
+            title: 'Hello World',
+            image: 'https://example.com/image.jpg',
+            description: 'This is a test article',
+            post_date: new Date(),
+            comments: [],
+        };
+        articleModel_1.default.findByIdAndDelete = jest.fn().mockResolvedValue(mockArticle);
+        yield (0, articleController_1.deleteArticle)(req, res);
+        expect(res.status).toBeTruthy();
+        expect(res.json).toBeTruthy();
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            status: "success",
+            data: null,
+        });
+    }));
+});
+describe('Update a article', () => {
+    it('should update a article', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            params: {
+                id: '1',
+            },
+            body: {
+                title: 'Hey Trojans',
+                image: 'https://example.com/image.jpg',
+                description: 'This is a test article',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        const initialArticle = {
+            _id: '1',
+            title: 'Hey Trojans',
+            image: 'https://example.com/image.jpg',
+            description: 'This is a test article',
+            post_date: new Date(),
+            comments: [],
+        };
+        const mockArticle = Object.assign(Object.assign({}, initialArticle), { save: jest.fn().mockResolvedValue(initialArticle) });
+        articleModel_1.default.findById = jest.fn().mockResolvedValue(mockArticle);
+        yield (0, articleController_1.updateArticle)(req, res);
+        expect(res.status).toHaveBeenNthCalledWith(1, 200);
+        expect(mockArticle.title).toEqual('Hey Trojans');
+        expect(mockArticle.image).toEqual('https://example.com/image.jpg');
+        expect(mockArticle.description).toEqual('This is a test article');
+    }));
+});

@@ -16,7 +16,7 @@ const ArticleSchema = new mongoose_1.Schema({
     },
     post_date: {
         type: Date,
-        default: Date.now(),
+        default: new Date(),
     },
     comments: []
 }, { timestamps: true });

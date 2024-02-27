@@ -74,12 +74,11 @@ const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             });
         }
         let toDate = new Date();
-        let day = toDate.toDateString();
         const newArticle = yield articleModel_1.default.create({
             title,
             image,
             description,
-            date: day,
+            post_date: toDate,
             comments: [],
         });
         yield newArticle.save();
