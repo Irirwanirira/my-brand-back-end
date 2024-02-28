@@ -11,7 +11,6 @@
     "test": "jest --watchAll --detectOpenHandles",
     "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls",
-
     "swagger": "node ./src/swaggerDoc/swagger.js",
     "redocly": "npx @redocly/cli build-docs ./src/swaggerDoc/swagger-output.json -o index.html"
   },
@@ -25,7 +24,9 @@
   "license": "ISC",
   "dependencies": {
     "@redocly/openapi-cli": "^1.0.0-beta.95",
+    "check-code-coverage": "^1.10.5",
     "cors": "^2.8.5",
+    "coveralls-next": "^4.2.0",
     "express": "^4.18.2",
     "express-session": "^1.18.0",
     "helmet": "^7.1.0",
