@@ -1,8 +1,13 @@
+import messageValidator from "../controllers/message/messageValidator";
 import articleValidator from "../controllers/article/articleValidator";
-import { userValidator } from "../controllers/user/userValidator";
-import { Request, Response } from "express";
+import {
+  userValidator,
+  loginValidator,
+} from "../controllers/user/userValidator";
+import { Request, Response, response } from "express";
+import commentValidator from "../controllers/comment/commentValidator";
 
-describe('Article Validator Middleware', () => {
+describe("Article Validator Middleware", () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
   let next: jest.Mock;
@@ -17,64 +22,223 @@ describe('Article Validator Middleware', () => {
     jest.clearAllMocks();
   });
 
-  it('should pass validation for valid article', () => {
-    req.body = { title: 'Test Title', image: 'test.jpg', description: 'Test Description' };
+  it("should pass validation for valid article", () => {
+    req.body = {
+      title: "Test Title",
+      image: "test.jpg",
+      description: "Test Description",
+    };
     articleValidator(req as Request, res as Response, next);
     expect(next).toHaveBeenCalled();
     expect(res.status).not.toHaveBeenCalled();
   });
 
   it.each([
-    ['title', 'image', 'description'],
-    ['title', 'description'],
-    ['image', 'description'],
-    ['title', 'image'],
-  ])('should return 400 if %s is missing', (missingField: string, ...otherFields: string[]) => {
-    const payload: any = {};
-    for (const field of otherFields) {
-      payload[field] = 'Test';
+    ["title", "image", "description"],
+    ["title", "description"],
+    ["image", "description"],
+    ["title", "image"],
+  ])(
+    "should return 400 if %s is missing",
+    (missingField: string, ...otherFields: string[]) => {
+      const payload: any = {};
+      for (const field of otherFields) {
+        payload[field] = "Test";
+      }
+      req.body = payload;
+      articleValidator(req as Request, res as Response, next);
+      expect(next).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(400);
     }
-    req.body = payload;
-    articleValidator(req as Request, res as Response, next);
-    expect(next).not.toHaveBeenCalled();
+  );
+});
+
+describe("User Validator Middleware", () => {
+  it("should call next() if input is valid", () => {
+    const req = {
+      body: {
+        name: "John",
+        email: "john@example.com",
+        password: "password123",
+      },
+    } as Request;
+    const res = {} as unknown as Response;
+    const next = jest.fn();
+
+    userValidator(req, res, next);
+
+    expect(next).toHaveBeenCalled();
+  });
+
+  it("should return 400 status with error message if required fields are missing", () => {
+    const req = { body: { name: "John" } } as Request;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+    const next = jest.fn();
+
+    userValidator(req, res, next);
+
     expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      status: "fail",
+      message: expect.any(String),
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it("should return 400 status with error message if input is invalid", () => {
+    const req = {
+      body: { name: "John", email: "invalidemail", password: "short" },
+    } as Request;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+    const next = jest.fn();
+
+    userValidator(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      status: "fail",
+      message: expect.any(String),
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  describe("loginValidator middleware", () => {
+    it("should call next() if input is valid", () => {
+      const req = {
+        body: { email: "john@example.com", password: "password123" },
+      } as Request;
+      const res = {} as unknown as Response;
+      const next = jest.fn();
+
+      loginValidator(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+    });
+
+    it("should return 400 status with error message if required fields are missing", () => {
+      const req = { body: { email: "john@example.com" } } as Request;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+
+      const next = jest.fn();
+
+      loginValidator(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "fail",
+        message: expect.any(String),
+      });
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    it("should return 400 status with error message if input is invalid", () => {
+      const req = {
+        body: { email: "invalidemail", password: "short" },
+      } as Request;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+      const next = jest.fn();
+
+      loginValidator(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "fail",
+        message: expect.any(String),
+      });
+      expect(next).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("Message Validator Middleware", () => {
+    it("should call next() if input is valid", () => {
+      const req = {
+        body: { name: "John", email: "john@example.com", message: "Hello" },
+      };
+      const res = {} as Response;
+      const next = jest.fn();
+
+      messageValidator(req as Request, res, next);
+
+      expect(next).toHaveBeenCalled();
+    });
+    it("should return 400 status with error message if input is invalid", () => {
+      const req = {
+        body: { name: "John", email: "invalidemail", message: "Hello" },
+      } as Request;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+      const next = jest.fn();
+
+      messageValidator(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "fail",
+        message: expect.any(String),
+      });
+      expect(next).not.toHaveBeenCalled();
+    });
   });
 });
 
-describe('User Validator Middleware', () => {
-    let req: Partial<Request>;
-    let res: Partial<Response>;
-    let next: jest.Mock;
-    
-    beforeEach(() => {
-        req = { body: {} };
-        res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-        next = jest.fn();
-    });
-    
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-    // it('should pass validation for valid user', () => {
-    //     req.body = { email: 'henry@gmail.com', password: 'password' };
-    //     userValidator(req as Request, res as Response, next);
-    //     expect(next).toHaveBeenCalled();
-    //     expect(res.status).not.toHaveBeenCalled();
-    // });
+describe('commentValidator middleware', () => {
+  it('should call next() if input is valid', () => {
+      const req = { body: { comment: 'Valid comment', author: 'Valid author' } } as Request;
+      const res = {} as Response;
+      const next = jest.fn();
 
-    it.each([
-        ['email', 'password'],
-        ['email'],
-        ['password'],
-    ])('should return 400 if %s is missing', (missingField: string, ...otherFields: string[]) => {
-        const payload: any = {};
-        for (const field of otherFields){
-            payload[field] = 'Test';
-        }
-        req.body = payload;
-        userValidator(req as Request, res as Response, next);
-        expect(next).not.toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(400);
-    });
-})
+      commentValidator(req, res, next);
 
+      expect(next).toHaveBeenCalled();
+  });
+
+  it('should return 400 status with error message if required fields are missing', () => {
+      const req = { body: {} } as Request; 
+      const res = {
+          status: jest.fn().mockReturnThis(),
+          json: jest.fn(),
+      } as unknown as Response;
+      const next = jest.fn();
+
+      commentValidator(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+          status: 'fail',
+          message: expect.any(String), 
+      });
+      expect(next).not.toHaveBeenCalled(); 
+  });
+
+  it('should return 400 status with error message if input is invalid', () => {
+      const req = { body: { comment: '', author: '' } } as Request;
+      const res = {
+          status: jest.fn().mockReturnThis(),
+          json: jest.fn(),
+      } as unknown as Response;
+      const next = jest.fn();
+
+      commentValidator(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+          status: 'fail',
+          message: expect.any(String),
+      });
+      expect(next).not.toHaveBeenCalled();
+  });
+});

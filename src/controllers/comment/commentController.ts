@@ -1,5 +1,5 @@
 import express, { Application, Request, Response, NextFunction } from "express";
-import pkg from "http-status";
+import pkg, { NO_CONTENT } from "http-status";
 import Articles from "../../models/articleModel";
 // import Comment from "../../models/commentModel.js";
 
@@ -36,7 +36,6 @@ export const addComment = async (req: Request, res: Response) => {
 
 export const deleteComment = async (req: Request, res: Response) => {
   const id = req.params.id;
-  console.log(id)
   try {
     const article: any = await Articles.findById(id)
     if (!article) {
@@ -49,13 +48,11 @@ export const deleteComment = async (req: Request, res: Response) => {
     let comments = article.comments.filter((comment: any) => comment.id !== req.params.commentId);
     article.comments = comments;
     await article.save();
-    return res.status(OK).json({
+    return res.status(NO_CONTENT).json({
       status: "success",
       message: "comment deleted successfully",
     });
 
-
-  
   } catch (error) {
     return res.status(NOT_FOUND).json({
       status: "fail",

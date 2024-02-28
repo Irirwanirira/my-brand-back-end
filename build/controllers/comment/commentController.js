@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteComment = exports.addComment = void 0;
-const http_status_1 = __importDefault(require("http-status"));
+const http_status_1 = __importStar(require("http-status"));
 const articleModel_1 = __importDefault(require("../../models/articleModel"));
 // import Comment from "../../models/commentModel.js";
 const { NOT_FOUND, BAD_REQUEST, OK, CREATED } = http_status_1.default;
@@ -49,7 +72,6 @@ const addComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.addComment = addComment;
 const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    console.log(id);
     try {
         const article = yield articleModel_1.default.findById(id);
         if (!article) {
@@ -61,7 +83,7 @@ const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         let comments = article.comments.filter((comment) => comment.id !== req.params.commentId);
         article.comments = comments;
         yield article.save();
-        return res.status(OK).json({
+        return res.status(http_status_1.NO_CONTENT).json({
             status: "success",
             message: "comment deleted successfully",
         });
