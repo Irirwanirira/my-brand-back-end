@@ -6,7 +6,7 @@ const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR  
 
 export const getArticles = async (req: Request, res: Response) => {
   try {
-    const articles = await Articles.find();
+    const articles = await Articles.find().populate("comments");
     return res.status(OK).json({
       status: "success",
       data: { articles },
@@ -62,15 +62,18 @@ export const createArticle = async (req: Request, res: Response) => {
       });
     }
 
-    let toDate = new Date();
     const newArticle = await Articles.create({
       title,
       image,
       description,
-      post_date: toDate,
+      author: req.body.userId,
       comments: [],
+      likes: [],
+      
     });
+
     await newArticle.save();
+    
     return res.status(CREATED).json({
       status: "success",
       data: { article: newArticle },
@@ -78,18 +81,43 @@ export const createArticle = async (req: Request, res: Response) => {
   } catch (error) {
     return res.send({
       status: "fail",
-      message: "unable to create new article",
+      message: "unable to create new article", error
+    });
+  }
+};
+
+export const softDeleteArticle = async (req: Request, res: Response) => {
+  const id = req.params.articleId;
+  try {
+    const article = await Articles.findById(id);
+    if (!article){
+      return res.status(NOT_FOUND).json({
+        status: "fail",
+        message: `article with id: ${id} can not be found`,
+      })
+    }
+    article.isDeleted = true;
+    article.deletedAt = new Date();
+    await article.save();
+    return res.status(OK).json({
+      status: "success",
+      message: `article with id: ${id} has softly been deleted`,
+    });
+  } catch (error) {
+    return res.status(BAD_REQUEST).json({
+      status: "fail",
+      message: "unable to delete article",
     });
   }
 };
 
 export const deleteArticle = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = req.params.articleId;
   try {
     const article = await Articles.findByIdAndDelete({ _id: id });
     return res.status(200).json({
       status: "success",
-      data: null,
+      message: `article with id: ${id} has been deleted`,
     });
   } catch (error) {
     return res.status(NOT_FOUND).json({

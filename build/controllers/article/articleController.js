@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateArticle = exports.deleteArticle = exports.createArticle = exports.getUniqueArticle = exports.getArticles = void 0;
+exports.updateArticle = exports.deleteArticle = exports.softDeleteArticle = exports.createArticle = exports.getUniqueArticle = exports.getArticles = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const articleModel_1 = __importDefault(require("../../models/articleModel"));
 const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR } = http_status_1.default;
 const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const articles = yield articleModel_1.default.find();
+        const articles = yield articleModel_1.default.find().populate("comments");
         return res.status(OK).json({
             status: "success",
             data: { articles },
@@ -73,13 +73,13 @@ const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 message: "All fields are required",
             });
         }
-        let toDate = new Date();
         const newArticle = yield articleModel_1.default.create({
             title,
             image,
             description,
-            post_date: toDate,
+            author: req.body.userId,
             comments: [],
+            likes: [],
         });
         yield newArticle.save();
         return res.status(CREATED).json({
@@ -90,18 +90,44 @@ const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     catch (error) {
         return res.send({
             status: "fail",
-            message: "unable to create new article",
+            message: "unable to create new article", error
         });
     }
 });
 exports.createArticle = createArticle;
+const softDeleteArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.articleId;
+    try {
+        const article = yield articleModel_1.default.findById(id);
+        if (!article) {
+            return res.status(NOT_FOUND).json({
+                status: "fail",
+                message: `article with id: ${id} can not be found`,
+            });
+        }
+        article.isDeleted = true;
+        article.deletedAt = new Date();
+        yield article.save();
+        return res.status(OK).json({
+            status: "success",
+            message: `article with id: ${id} has softly been deleted`,
+        });
+    }
+    catch (error) {
+        return res.status(BAD_REQUEST).json({
+            status: "fail",
+            message: "unable to delete article",
+        });
+    }
+});
+exports.softDeleteArticle = softDeleteArticle;
 const deleteArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
+    const id = req.params.articleId;
     try {
         const article = yield articleModel_1.default.findByIdAndDelete({ _id: id });
         return res.status(200).json({
             status: "success",
-            data: null,
+            message: `article with id: ${id} has been deleted`,
         });
     }
     catch (error) {

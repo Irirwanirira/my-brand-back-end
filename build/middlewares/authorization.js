@@ -37,6 +37,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 });
             }
             else if (decoded) {
+                req.body.userId = decoded.userId;
                 req.body.email = decoded.userEmail;
                 req.body.role = decoded.roles;
                 next();

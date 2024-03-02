@@ -5,6 +5,7 @@ import {
   getUniqueArticle,
   updateArticle,
   deleteArticle,
+  softDeleteArticle,
 } from "../controllers/article/articleController";
 import ROLE from "../utils/roles";
 import auth from "../middlewares/authorization";
@@ -24,6 +25,7 @@ router
   .get("/", getArticles)
   .get("/:id", getUniqueArticle)
   .delete("/:id", auth, permit(ROLE.ADMIN), deleteArticle)
+  .delete("/soft-delete/:articleId",auth, permit(ROLE.ADMIN), softDeleteArticle)
   .patch("/:id", auth, permit(ROLE.ADMIN), auth, updateArticle);
 
 export default router;

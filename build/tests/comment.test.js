@@ -13,45 +13,99 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const articleModel_1 = __importDefault(require("../models/articleModel"));
+const commentModel_1 = __importDefault(require("../models/commentModel"));
 const commentController_1 = require("../controllers/comment/commentController");
-describe("addComment function", () => {
-    it("should return 400 if the article is not found", () => __awaiter(void 0, void 0, void 0, function* () {
+describe('Add a comment', () => {
+    it('should add a comment to an existing article', () => __awaiter(void 0, void 0, void 0, function* () {
         const req = {
-            params: { id: "non_existing_article_id" },
-            body: { comment: "Test comment", author: "Test author" },
+            body: {
+                content: 'This is a comment content',
+                userId: 'user123',
+            },
+            params: {
+                articleId: 'article456',
+            },
         };
         const res = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn(),
         };
-        articleModel_1.default.findById = jest.fn().mockResolvedValueOnce(null);
+        const mockArticle = {
+            _id: 'article456',
+            comments: [],
+            save: jest.fn(),
+        };
+        const mockComment = {
+            _id: 'comment789',
+            content: req.body.content,
+            author: req.body.userId,
+            post: req.params.articleId,
+        };
+        articleModel_1.default.findById = jest.fn().mockResolvedValue(mockArticle);
+        commentModel_1.default.create = jest.fn().mockResolvedValue(mockComment);
         yield (0, commentController_1.addComment)(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(articleModel_1.default.findById).toHaveBeenCalledWith(req.params.articleId);
+        expect(commentModel_1.default.create).toHaveBeenCalledWith({
+            content: req.body.content,
+            author: req.body.userId,
+            post: req.params.articleId,
+        });
+        expect(mockArticle.comments).toContain(mockComment._id);
+        expect(mockArticle.save).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
-            status: "fail",
-            message: "unable to add comment",
+            status: 'success',
+            data: { comment: mockComment },
         });
     }));
-    it("should return 400 if unable to add comment", () => __awaiter(void 0, void 0, void 0, function* () {
+    it('should return error if article does not exist', () => __awaiter(void 0, void 0, void 0, function* () {
         const req = {
-            params: { id: "article_id" },
-            body: { comment: "Test comment", author: "Test author" },
+            body: {
+                content: 'This is a comment content',
+                userId: 'user123',
+            },
+            params: {
+                articleId: 'article456',
+            },
         };
         const res = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn(),
         };
-        const mockedArticle = {
-            _id: "article_id",
-            comments: [],
-            save: jest.fn().mockRejectedValueOnce(new Error("Database error")),
-        };
-        articleModel_1.default.findById = jest.fn().mockResolvedValueOnce(mockedArticle);
+        articleModel_1.default.findById = jest.fn().mockResolvedValue(null);
         yield (0, commentController_1.addComment)(req, res);
+        expect(articleModel_1.default.findById).toHaveBeenCalledWith(req.params.articleId);
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            status: 'fail',
+            message: 'article not found',
+        });
+    }));
+    it('should return error if unable to add comment', () => __awaiter(void 0, void 0, void 0, function* () {
+        const req = {
+            body: {
+                content: 'This is a comment content',
+                userId: 'user123',
+            },
+            params: {
+                articleId: 'article456',
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+        const mockArticle = {
+            _id: 'article456',
+        };
+        articleModel_1.default.findById = jest.fn().mockResolvedValue(mockArticle);
+        commentModel_1.default.create = jest.fn().mockRejectedValue(new Error('Some error'));
+        yield (0, commentController_1.addComment)(req, res);
+        expect(articleModel_1.default.findById).toHaveBeenCalledWith(req.params.articleId);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
-            status: "fail",
-            message: "unable to add comment",
+            status: 'fail',
+            message: 'unable to add comment',
         });
     }));
 });

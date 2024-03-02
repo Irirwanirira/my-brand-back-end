@@ -15,5 +15,6 @@ router
     .get("/", articleController_1.getArticles)
     .get("/:id", articleController_1.getUniqueArticle)
     .delete("/:id", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), articleController_1.deleteArticle)
+    .delete("/soft-delete/:articleId", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), articleController_1.softDeleteArticle)
     .patch("/:id", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), authorization_1.default, articleController_1.updateArticle);
 exports.default = router;

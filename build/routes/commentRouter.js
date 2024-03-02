@@ -11,6 +11,7 @@ const adminPermission_1 = __importDefault(require("../middlewares/adminPermissio
 const commentValidator_1 = __importDefault(require("../controllers/comment/commentValidator"));
 const router = express_1.default.Router();
 router
-    .post("/article/:id/comment", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN, roles_1.default.USER), commentValidator_1.default, commentController_1.addComment)
-    .delete("/:id/comment/:commentId", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), commentController_1.deleteComment);
+    .post("/:articleId", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN, roles_1.default.USER), commentValidator_1.default, commentController_1.addComment)
+    .get("/:articleId", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), commentController_1.getComments)
+    .delete("/:commentId", authorization_1.default, (0, adminPermission_1.default)(roles_1.default.ADMIN), commentController_1.deleteComment);
 exports.default = router;

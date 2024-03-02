@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addComment,
+  getComments,
   deleteComment,
 } from "../controllers/comment/commentController";
 import ROLE from "../utils/roles";
@@ -12,7 +13,8 @@ import commentValidator from "../controllers/comment/commentValidator";
 const router = express.Router();
 
 router
-    .post("/article/:id/comment", auth, permit(ROLE.ADMIN, ROLE.USER), commentValidator, addComment)
-    .delete("/:id/comment/:commentId", auth, permit(ROLE.ADMIN), deleteComment)
+    .post("/:articleId", auth, permit(ROLE.ADMIN, ROLE.USER), commentValidator, addComment)
+    .get("/:articleId", auth, permit(ROLE.ADMIN), getComments)
+    .delete("/:commentId", auth, permit(ROLE.ADMIN), deleteComment)
 
 export default router;

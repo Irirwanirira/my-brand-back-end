@@ -41,7 +41,6 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
     }
     catch (error) {
-        console.log(error);
         return res.status(BAD_REQUEST).json({
             status: "fail",
             message: "unable to register user, kindly use different email",
@@ -67,11 +66,12 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
         const payload = {
+            userId: user._id,
             userEmail: user.email,
             roles: user.role,
         };
         const accessToken = jsonwebtoken_1.default.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: "15min",
+            expiresIn: "15d",
         });
         const refreshToken = jsonwebtoken_1.default.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: "1y",

@@ -35,31 +35,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteComment = exports.addComment = void 0;
+exports.deleteComment = exports.getComments = exports.addComment = void 0;
 const http_status_1 = __importStar(require("http-status"));
 const articleModel_1 = __importDefault(require("../../models/articleModel"));
-// import Comment from "../../models/commentModel.js";
+const commentModel_1 = __importDefault(require("../../models/commentModel"));
 const { NOT_FOUND, BAD_REQUEST, OK, CREATED } = http_status_1.default;
 const addComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { content } = req.body;
+    const postId = req.params.articleId;
     try {
-        const id = req.params.id;
-        const { comment, author } = req.body;
-        const article = yield articleModel_1.default.findById(id).populate("comments");
+        const article = yield articleModel_1.default.findById(postId);
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
                 message: "article not found",
             });
         }
-        const newComment = {
-            id: Date.now().toString(),
-            comment, author
-        };
-        article.comments.push(newComment);
+        const comment = yield commentModel_1.default.create({
+            content,
+            author: req.body.userId,
+            post: postId
+        });
+        article.comments.push(comment._id);
         yield article.save();
         return res.status(CREATED).json({
             status: "success",
-            data: { article },
+            data: { comment },
         });
     }
     catch (error) {
@@ -70,28 +71,48 @@ const addComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.addComment = addComment;
-const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
+const getComments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.articleId;
     try {
-        const article = yield articleModel_1.default.findById(id);
+        const article = yield articleModel_1.default.findById(id).populate("comments");
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
                 message: "article not found",
             });
         }
-        let comments = article.comments.filter((comment) => comment.id !== req.params.commentId);
-        article.comments = comments;
-        yield article.save();
-        return res.status(http_status_1.NO_CONTENT).json({
+        return res.status(OK).json({
             status: "success",
-            message: "comment deleted successfully",
+            data: { comments: article.comments },
         });
     }
     catch (error) {
         return res.status(NOT_FOUND).json({
             status: "fail",
-            message: `comment with id: ${id} can not be found`,
+            message: "comments not found",
+        });
+    }
+});
+exports.getComments = getComments;
+const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const commentId = req.params.commentId;
+    try {
+        const comment = yield commentModel_1.default.findByIdAndDelete(commentId);
+        if (!comment) {
+            return res.status(NOT_FOUND).json({
+                status: "fail",
+                message: "comment not found",
+            });
+        }
+        return res.status(http_status_1.NO_CONTENT).json({
+            status: "success",
+            message: `comment with id: ${commentId} has been deleted`,
+        });
+    }
+    catch (error) {
+        return res.status(BAD_REQUEST).json({
+            status: "fail",
+            message: "unable to delete comment",
         });
     }
 });

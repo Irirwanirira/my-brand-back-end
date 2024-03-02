@@ -29,7 +29,6 @@ export const registerUser = async (req: Request, res: Response) => {
       data: { user },
     });
   } catch (error) {
-    console.log(error);
     return res.status(BAD_REQUEST).json({
       status: "fail",
       message: "unable to register user, kindly use different email",
@@ -56,12 +55,13 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     const payload = {
+      userId: user._id,
       userEmail: user.email,
       roles: user.role,
     };
 
     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
-      expiresIn: "15min",
+      expiresIn: "15d",
     });
 
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {

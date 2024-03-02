@@ -1,11 +1,15 @@
 import { model, Schema, Document } from "mongoose";
 
-interface ArticleType extends Document {
+export interface ArticleType extends Document {
   title: string;
   image: string;
   description: string;
   date: string;
+  author: string
   comments: [];
+  likes: []
+  isDeleted: boolean;
+  deletedAt: Date;
 }
 
 const ArticleSchema = new Schema(
@@ -26,7 +30,29 @@ const ArticleSchema = new Schema(
       type: Date,
       default: new Date(),
     },
-    comments: []
+    author:{
+      type: Schema.Types.ObjectId, ref: "Users",
+      required: true
+    },
+
+    comments: [{
+      type: Schema.Types.ObjectId, ref: "Comments",
+      required: true
+    }],
+
+    likes: [{
+      type: Schema.Types.ObjectId, ref: 'Users',
+      required: true
+    }],
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
+
   },
   { timestamps: true }
 );

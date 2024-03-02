@@ -98,16 +98,6 @@
         }
       }
     },
-    "/auth/google": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/auth/users": {
       "get": {
         "description": "",
@@ -272,6 +262,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "userId": {
+                  "example": "any"
+                },
                 "title": {
                   "example": "any"
                 },
@@ -368,12 +361,30 @@
         }
       }
     },
-    "/comment/article/{id}/comment": {
+    "/article/soft-delete/{articleId}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/comment/{articleId}": {
       "post": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "articleId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -384,10 +395,10 @@
             "schema": {
               "type": "object",
               "properties": {
-                "comment": {
+                "userId": {
                   "example": "any"
                 },
-                "author": {
+                "content": {
                   "example": "any"
                 }
               }
@@ -399,23 +410,91 @@
             "description": ""
           }
         }
-      }
-    },
-    "/comment/{id}/comment/{commentId}": {
-      "delete": {
+      },
+      "get": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "articleId",
             "in": "path",
             "required": true,
             "type": "string"
-          },
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/comment/{commentId}": {
+      "delete": {
+        "description": "",
+        "parameters": [
           {
             "name": "commentId",
             "in": "path",
             "required": true,
             "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/like/{articleId}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {

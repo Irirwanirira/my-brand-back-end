@@ -15,7 +15,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization.split(' ')[1];
 
     if(token === undefined || token === null){
-        return res.status(UNAUTHORIZED).json({ 
+        return res.status(UNAUTHORIZED).json({
             status: 'fail',
             message: 'Unauthorized' });
     }
@@ -30,6 +30,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
                     });
             }
             else if(decoded){
+                req.body.userId = decoded.userId;
                 req.body.email = decoded.userEmail;
                 req.body.role = decoded.roles;
                 next();

@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const joi_1 = __importDefault(require("joi"));
 const validator = joi_1.default.object({
-    comment: joi_1.default.string().required(),
+    content: joi_1.default.string().required(),
     author: joi_1.default.string().required(),
 });
 const commentValidator = (req, res, next) => {
-    const payload = req.body;
+    const payload = { content: req.body.content, author: req.body.userId };
     const { error } = validator.validate(payload);
     if (error) {
         return res.status(400).json({

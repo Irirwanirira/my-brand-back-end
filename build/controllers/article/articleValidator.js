@@ -8,9 +8,10 @@ const validArticle = joi_1.default.object({
     title: joi_1.default.string().required(),
     image: joi_1.default.string().required(),
     description: joi_1.default.string().required(),
+    author: joi_1.default.string().required()
 });
 const articleValidator = (req, res, next) => {
-    const payload = { title: req.body.title, image: req.body.image, description: req.body.description };
+    const payload = { title: req.body.title, image: req.body.image, description: req.body.description, author: req.body.userId };
     const { error } = validArticle.validate(payload);
     if (error) {
         return res.status(400).json({

@@ -1,30 +1,31 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import pkg, { NO_CONTENT } from "http-status";
 import Articles from "../../models/articleModel";
-// import Comment from "../../models/commentModel.js";
+import Comments from "../../models/commentModel";
 
 const { NOT_FOUND, BAD_REQUEST, OK, CREATED } = pkg;
 
 export const addComment = async (req: Request, res: Response) => {
+  const {content} = req.body;
+  const postId = req.params.articleId;
   try {
-    const id = req.params.id;
-    const { comment, author } = req.body;
-
-    const article: any = await Articles.findById(id).populate("comments");
+    const article: any = await Articles.findById(postId)
     if (!article) {
       return res.status(NOT_FOUND).json({
         status: "fail",
         message: "article not found",
       });
     }
-    const newComment = { 
-      id: Date.now().toString(),
-      comment, author}
-    article.comments.push(newComment);
+    const comment = await Comments.create({
+      content,
+      author: req.body.userId,
+      post: postId
+    })
+    article.comments.push(comment._id);
     await article.save();
     return res.status(CREATED).json({
       status: "success",
-      data: { article },
+      data: { comment },
     });
   } catch (error) {
     return res.status(BAD_REQUEST).json({
@@ -34,29 +35,47 @@ export const addComment = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteComment = async (req: Request, res: Response) => {
-  const id = req.params.id;
+export const getComments = async (req: Request, res: Response) => {
+  const id = req.params.articleId;
   try {
-    const article: any = await Articles.findById(id)
+    const article: any = await Articles.findById(id).populate("comments");
     if (!article) {
       return res.status(NOT_FOUND).json({
         status: "fail",
         message: "article not found",
       });
     }
-
-    let comments = article.comments.filter((comment: any) => comment.id !== req.params.commentId);
-    article.comments = comments;
-    await article.save();
-    return res.status(NO_CONTENT).json({
+    return res.status(OK).json({
       status: "success",
-      message: "comment deleted successfully",
+      data: { comments: article.comments },
     });
-
   } catch (error) {
     return res.status(NOT_FOUND).json({
       status: "fail",
-      message: `comment with id: ${id} can not be found`,
+      message: "comments not found",
+    });
+  }
+}
+
+export const deleteComment = async (req: Request, res: Response) => {
+  const commentId = req.params.commentId;
+  try {
+    const comment: any = await Comments.findByIdAndDelete(commentId);
+    if (!comment) {
+      return res.status(NOT_FOUND).json({
+        status: "fail",
+        message: "comment not found",
+      });
+    }
+    return res.status(NO_CONTENT).json({
+      status: "success",
+      message: `comment with id: ${commentId} has been deleted`,
+    });
+ 
+  } catch (error) {
+    return res.status(BAD_REQUEST).json({
+      status: "fail",
+      message: "unable to delete comment",
     });
   }
 };

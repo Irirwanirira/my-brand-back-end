@@ -18,7 +18,26 @@ const ArticleSchema = new mongoose_1.Schema({
         type: Date,
         default: new Date(),
     },
-    comments: []
+    author: {
+        type: mongoose_1.Schema.Types.ObjectId, ref: "Users",
+        required: true
+    },
+    comments: [{
+            type: mongoose_1.Schema.Types.ObjectId, ref: "Comments",
+            required: true
+        }],
+    likes: [{
+            type: mongoose_1.Schema.Types.ObjectId, ref: 'Users',
+            required: true
+        }],
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    deletedAt: {
+        type: Date,
+        default: null,
+    },
 }, { timestamps: true });
 const Articles = (0, mongoose_1.model)("Articles", ArticleSchema);
 exports.default = Articles;
