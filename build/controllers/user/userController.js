@@ -85,7 +85,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(OK).json({
             status: "success",
             data: {
-                user: user.name,
+                user: { id: user._id, name: user.name, email: user.email, role: user.role },
                 accessToken,
             },
         });
