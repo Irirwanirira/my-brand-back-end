@@ -9,7 +9,7 @@
     "start-dev": "nodemon ./build/index.js",
     "dev": "nodemon --exec ts-node ./src/index.ts",
     "test": "jest --watchAll --detectOpenHandles",
-    "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+    "coverage": "rm -rf ./coverage && jest --coverage --detectOpenHandles",
     "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls",
     "swagger": "node ./src/swaggerDoc/swagger.js",
     "redocly": "npx @redocly/cli build-docs ./src/swaggerDoc/swagger-output.json -o index.html"
