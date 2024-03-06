@@ -18,7 +18,7 @@ const articleModel_1 = __importDefault(require("../../models/articleModel"));
 const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR } = http_status_1.default;
 const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const articles = yield articleModel_1.default.find().populate("comments");
+        const articles = yield articleModel_1.default.find().populate('comments');
         return res.status(OK).json({
             status: "success",
             data: { articles },
@@ -105,7 +105,7 @@ const softDeleteArticle = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 message: `article with id: ${id} can not be found`,
             });
         }
-        article.isDeleted = true;
+        article.isDeleted = !article.isDeleted;
         article.deletedAt = new Date();
         yield article.save();
         return res.status(OK).json({
@@ -122,7 +122,7 @@ const softDeleteArticle = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.softDeleteArticle = softDeleteArticle;
 const deleteArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.articleId;
+    const id = req.params.id;
     try {
         const article = yield articleModel_1.default.findByIdAndDelete({ _id: id });
         return res.status(200).json({
