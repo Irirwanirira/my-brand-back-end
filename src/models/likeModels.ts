@@ -6,7 +6,7 @@ interface LikeType extends Document {
 }
 
 const LikeSchema = new Schema({
-    user: {type: Schema.Types.ObjectId, ref: "Users"},
+    user: {type: Schema.Types.ObjectId, ref: "User"},
     article: {type:Schema.Types.ObjectId, ref: "Articles"},
 },
 {   timestamps: true}

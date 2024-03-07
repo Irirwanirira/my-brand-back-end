@@ -8,8 +8,8 @@ interface CommentType extends Document {
 
 const CommentSchema = new Schema({
     content: String,
-    author: {type: Schema.Types.ObjectId, ref: "Users"},
-    post: {type:Schema.Types.ObjectId, ref: "Articles"},
+    author: {type: Schema.Types.ObjectId, ref: "User"},
+    post: {type:Schema.Types.ObjectId, ref: "Article"},
 },
 {   timestamps: true}
 );

@@ -31,7 +31,7 @@ const ArticleSchema = new Schema(
       default: new Date(),
     },
     author:{
-      type: Schema.Types.ObjectId, ref: "Users",
+      type: Schema.Types.ObjectId, ref: "User",
       required: true
     },
 
@@ -41,7 +41,7 @@ const ArticleSchema = new Schema(
     }],
 
     likes: [{
-      type: Schema.Types.ObjectId, ref: 'Users',
+      type: Schema.Types.ObjectId, ref: 'User',
       required: true
     }],
     isDeleted: {
@@ -56,5 +56,5 @@ const ArticleSchema = new Schema(
   },
   { timestamps: true }
 );
-const Articles = model<ArticleType>("Articles", ArticleSchema);
+const Articles = model<ArticleType>("Article", ArticleSchema);
 export default Articles;

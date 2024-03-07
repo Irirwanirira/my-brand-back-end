@@ -61,7 +61,7 @@ const createMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 .json({ status: "fail", message: "all fields are required" });
         }
         const newMessage = yield messageModel_1.default.create({
-            name: name,
+            name,
             email,
             message,
             date: day,

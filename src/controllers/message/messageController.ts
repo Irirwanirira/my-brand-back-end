@@ -47,7 +47,7 @@ export const createMessage = async (req: Request, res: Response) => {
         .json({ status: "fail", message: "all fields are required" });
     }
     const newMessage = await messageModel.create({
-      name: name,
+      name,
       email,
       message,
       date: day,

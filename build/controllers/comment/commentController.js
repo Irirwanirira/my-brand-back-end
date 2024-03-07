@@ -44,7 +44,12 @@ const addComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const { content } = req.body;
     const postId = req.params.articleId;
     try {
-        const article = yield articleModel_1.default.findById(postId);
+        const article = yield articleModel_1.default.findById(postId).populate({
+            path: "comments",
+            populate: {
+                path: "author"
+            },
+        });
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -74,7 +79,13 @@ exports.addComment = addComment;
 const getComments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.articleId;
     try {
-        const article = yield articleModel_1.default.findById(id).populate("comments");
+        const article = yield articleModel_1.default.findById(id).populate({
+            path: "comments",
+            populate: {
+                path: "author",
+                select: "name email"
+            },
+        });
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",

@@ -19,7 +19,7 @@ const ArticleSchema = new mongoose_1.Schema({
         default: new Date(),
     },
     author: {
-        type: mongoose_1.Schema.Types.ObjectId, ref: "Users",
+        type: mongoose_1.Schema.Types.ObjectId, ref: "User",
         required: true
     },
     comments: [{
@@ -27,7 +27,7 @@ const ArticleSchema = new mongoose_1.Schema({
             required: true
         }],
     likes: [{
-            type: mongoose_1.Schema.Types.ObjectId, ref: 'Users',
+            type: mongoose_1.Schema.Types.ObjectId, ref: 'User',
             required: true
         }],
     isDeleted: {
@@ -39,5 +39,5 @@ const ArticleSchema = new mongoose_1.Schema({
         default: null,
     },
 }, { timestamps: true });
-const Articles = (0, mongoose_1.model)("Articles", ArticleSchema);
+const Articles = (0, mongoose_1.model)("Article", ArticleSchema);
 exports.default = Articles;

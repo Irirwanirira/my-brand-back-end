@@ -6,7 +6,7 @@ const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR  
 
 export const getArticles = async (req: Request, res: Response) => {
   try {
-    const articles = await Articles.find().populate("comments");
+    const articles = await Articles.find().populate('comments').populate('author', 'name email');
     return res.status(OK).json({
       status: "success",
       data: { articles },
@@ -24,7 +24,13 @@ export const getArticles = async (req: Request, res: Response) => {
 export const getUniqueArticle = async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
-    const article = await Articles.findById(id).populate("comments");
+    const article = await Articles.findById(id).populate("author","name email").populate({
+      path: "comments",
+      populate: { 
+        path: "author",
+        select: "name email"
+      },
+    });
     if (!article) {
       return res.status(NOT_FOUND).json({
           status: "fail",
@@ -69,7 +75,6 @@ export const createArticle = async (req: Request, res: Response) => {
       author: req.body.userId,
       comments: [],
       likes: [],
-      
     });
 
     await newArticle.save();
@@ -96,12 +101,12 @@ export const softDeleteArticle = async (req: Request, res: Response) => {
         message: `article with id: ${id} can not be found`,
       })
     }
-    article.isDeleted = true;
+    article.isDeleted = !article.isDeleted;
     article.deletedAt = new Date();
     await article.save();
     return res.status(OK).json({
       status: "success",
-      message: `article with id: ${id} has softly been deleted`,
+      message: `article with id: ${id} has been softly deleted`,
     });
   } catch (error) {
     return res.status(BAD_REQUEST).json({
@@ -112,7 +117,7 @@ export const softDeleteArticle = async (req: Request, res: Response) => {
 };
 
 export const deleteArticle = async (req: Request, res: Response) => {
-  const id = req.params.articleId;
+  const id = req.params.id;
   try {
     const article = await Articles.findByIdAndDelete({ _id: id });
     return res.status(200).json({

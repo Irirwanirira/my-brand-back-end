@@ -9,7 +9,12 @@ export const addComment = async (req: Request, res: Response) => {
   const {content} = req.body;
   const postId = req.params.articleId;
   try {
-    const article: any = await Articles.findById(postId)
+    const article: any = await Articles.findById(postId).populate({
+      path: "comments",
+      populate: { 
+        path: "author"
+      },
+    });
     if (!article) {
       return res.status(NOT_FOUND).json({
         status: "fail",
@@ -38,7 +43,13 @@ export const addComment = async (req: Request, res: Response) => {
 export const getComments = async (req: Request, res: Response) => {
   const id = req.params.articleId;
   try {
-    const article: any = await Articles.findById(id).populate("comments");
+    const article: any = await Articles.findById(id).populate({
+      path: "comments",
+      populate: { 
+        path: "author",
+        select: "name email"
+      },
+    });
     if (!article) {
       return res.status(NOT_FOUND).json({
         status: "fail",

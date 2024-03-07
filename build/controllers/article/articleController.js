@@ -18,7 +18,7 @@ const articleModel_1 = __importDefault(require("../../models/articleModel"));
 const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR } = http_status_1.default;
 const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const articles = yield articleModel_1.default.find().populate('comments');
+        const articles = yield articleModel_1.default.find().populate('comments').populate('author', 'name email');
         return res.status(OK).json({
             status: "success",
             data: { articles },
@@ -37,7 +37,13 @@ exports.getArticles = getArticles;
 const getUniqueArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const article = yield articleModel_1.default.findById(id).populate("comments");
+        const article = yield articleModel_1.default.findById(id).populate("author", "name email").populate({
+            path: "comments",
+            populate: {
+                path: "author",
+                select: "name email"
+            },
+        });
         if (!article) {
             return res.status(NOT_FOUND).json({
                 status: "fail",
@@ -110,7 +116,7 @@ const softDeleteArticle = (req, res) => __awaiter(void 0, void 0, void 0, functi
         yield article.save();
         return res.status(OK).json({
             status: "success",
-            message: `article with id: ${id} has softly been deleted`,
+            message: `article with id: ${id} has been softly deleted`,
         });
     }
     catch (error) {
