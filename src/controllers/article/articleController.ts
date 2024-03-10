@@ -1,5 +1,6 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import  {Request, Response, NextFunction } from "express";
 import pkg from "http-status";
+// import cloudinary from "../../utils/cloudinary";
 import Articles from "../../models/articleModel";
 const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR  } = pkg;
 
@@ -152,6 +153,7 @@ export const updateArticle = async (req: Request, res: Response) => {
     if (description) {
       article.description = description;
     }
+    await article?.save();
     return res.status(OK).json({
       status: "success",
       data: { article },

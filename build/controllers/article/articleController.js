@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateArticle = exports.deleteArticle = exports.softDeleteArticle = exports.createArticle = exports.getUniqueArticle = exports.getArticles = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+// import cloudinary from "../../utils/cloudinary";
 const articleModel_1 = __importDefault(require("../../models/articleModel"));
 const { BAD_REQUEST, NOT_FOUND, OK, CREATED, NO_CONTENT, INTERNAL_SERVER_ERROR } = http_status_1.default;
 const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -164,6 +165,7 @@ const updateArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (description) {
             article.description = description;
         }
+        yield (article === null || article === void 0 ? void 0 : article.save());
         return res.status(OK).json({
             status: "success",
             data: { article },
